@@ -13,6 +13,9 @@ namespace vk {
 		VkWindow(int w, int h, std::string name);
 		~VkWindow();
 
+		VkWindow(const VkWindow&) = delete;
+		VkWindow& operator=(const VkWindow&) = delete;
+
 		bool shouldClose() { return glfwWindowShouldClose(window); };
 
 	private:
