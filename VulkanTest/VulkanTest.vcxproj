@@ -151,6 +151,9 @@
     <ClInclude Include="App\app.h" />
     <ClInclude Include="Vulkan\vk_window.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\vertShader.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
