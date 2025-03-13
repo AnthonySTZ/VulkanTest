@@ -145,13 +145,19 @@
   <ItemGroup>
     <ClCompile Include="App\app.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Vulkan\vk_pipeline.cpp" />
     <ClCompile Include="Vulkan\vk_window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\app.h" />
+    <ClInclude Include="Vulkan\vk_pipeline.h" />
     <ClInclude Include="Vulkan\vk_window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="compile.bat" />
+    <None Include="Shaders\fragShader.frag" />
+    <None Include="Shaders\fragShader.spv" />
+    <None Include="Shaders\vertShader.spv" />
     <None Include="Shaders\vertShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

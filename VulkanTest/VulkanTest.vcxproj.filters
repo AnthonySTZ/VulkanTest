@@ -27,6 +27,9 @@
     <ClCompile Include="App\app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Vulkan\vk_pipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vulkan\vk_window.h">
@@ -35,8 +38,17 @@
     <ClInclude Include="App\app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Vulkan\vk_pipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\vertShader.vert" />
+    <None Include="Shaders\fragShader.frag" />
+    <None Include="compile.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Shaders\fragShader.spv" />
+    <None Include="Shaders\vertShader.spv" />
   </ItemGroup>
 </Project>
