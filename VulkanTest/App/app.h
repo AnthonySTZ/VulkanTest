@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Vulkan/vk_window.h"
+#include "../Vulkan/vk_pipeline.h"
 
 namespace vk {
 
@@ -14,6 +15,7 @@ namespace vk {
 
 	private:
 		VkWindow vkWindow{WIDTH, HEIGHT, "Hello Vulkan"};
+		VkPipeline vkPipeline{"shaders/vertShader.spv", "shaders/fragShader.spv" };
 
 	};
 
