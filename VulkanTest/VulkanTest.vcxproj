@@ -143,7 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="App\app.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Vulkan\vk_window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App\app.h" />
+    <ClInclude Include="Vulkan\vk_window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
