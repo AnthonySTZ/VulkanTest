@@ -31,7 +31,7 @@ namespace hdn {
 			const std::string& vertFilepath, 
 			const std::string& fragFilepath, 
 			const PipelineConfigInfo& configInfo);
-		~HdnPipeline() {};
+		~HdnPipeline();
 
 		HdnPipeline(const HdnPipeline&) = delete;
 		void operator=(const HdnPipeline&) = delete;
