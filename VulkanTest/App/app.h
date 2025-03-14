@@ -15,7 +15,8 @@ namespace hdn {
 
 	private:
 		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
-		HdnPipeline hdnPipeline{"shaders/vertShader.spv", "shaders/fragShader.spv" };
+		HdnDevice hdnDevice{ hdnWindow };
+		HdnPipeline hdnPipeline{ hdnDevice, "shaders/vertShader.spv", "shaders/fragShader.spv", HdnPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
 
 	};
 
