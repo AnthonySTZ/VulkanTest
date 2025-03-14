@@ -14,6 +14,13 @@ namespace hdn {
 		createGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
 	}
 
+	HdnPipeline::~HdnPipeline() 
+	{
+		vkDestroyShaderModule(hdnDevice.device(), vertShaderModule, nullptr);
+		vkDestroyShaderModule(hdnDevice.device(), fragShaderModule, nullptr);
+		vkDestroyPipeline(hdnDevice.device(), graphicsPipeline, nullptr);
+	}
+
 	PipelineConfigInfo HdnPipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height)
 	{
 		PipelineConfigInfo configInfo{};
