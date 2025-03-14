@@ -10,7 +10,7 @@ namespace hdn {
 
 	struct PipelineConfigInfo {
 
-
+		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 
 	};
 
