@@ -3,6 +3,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
+#include <assert.h>
 
 namespace hdn {
 	HdnPipeline::HdnPipeline(
@@ -128,6 +129,9 @@ namespace hdn {
 
 	void HdnPipeline::createGraphicsPipeline(const std::string& vertFilepath, const std::string& fragFilepath, const PipelineConfigInfo& configInfo)
 	{
+		assert(configInfo.pipelineLayout != VK_NULL_HANDLE && "Cannot create graphics pipeline: No pipelineLayout provided in configInfo!");
+		assert(configInfo.renderPass != VK_NULL_HANDLE && "Cannot create graphics pipeline: No renderPass provided in configInfo!");
+
 		std::vector<char> vertCode = readFile(vertFilepath);
 		std::vector<char> fragCode = readFile(fragFilepath);
 
