@@ -283,7 +283,7 @@ namespace hdn {
         std::vector<VkExtensionProperties> extensions(extensionCount);
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-        std::cout << "available extensions:" << std::endl;
+        /*std::cout << "available extensions:" << std::endl;
         std::unordered_set<std::string> available;
         for (const auto& extension : extensions) {
             std::cout << "\t" << extension.extensionName << std::endl;
@@ -297,7 +297,7 @@ namespace hdn {
             if (available.find(required) == available.end()) {
                 throw std::runtime_error("Missing required glfw extension");
             }
-        }
+        }*/
     }
 
     bool HdnDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) {
