@@ -145,13 +145,15 @@
   <ItemGroup>
     <ClCompile Include="App\app.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Vulkan\vk_pipeline.cpp" />
-    <ClCompile Include="Vulkan\vk_window.cpp" />
+    <ClCompile Include="Vulkan\hdn_device.cpp" />
+    <ClCompile Include="Vulkan\hdn_pipeline.cpp" />
+    <ClCompile Include="Vulkan\hdn_window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\app.h" />
-    <ClInclude Include="Vulkan\vk_pipeline.h" />
-    <ClInclude Include="Vulkan\vk_window.h" />
+    <ClInclude Include="Vulkan\hdn_device.h" />
+    <ClInclude Include="Vulkan\hdn_pipeline.h" />
+    <ClInclude Include="Vulkan\hdn_window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="compile.bat" />

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Vulkan/vk_window.h"
-#include "../Vulkan/vk_pipeline.h"
+#include "../Vulkan/hdn_window.h"
+#include "../Vulkan/hdn_pipeline.h"
 
-namespace vk {
+namespace hdn {
 
 	class App {
 
@@ -14,8 +14,8 @@ namespace vk {
 		void run();
 
 	private:
-		VkWindow vkWindow{WIDTH, HEIGHT, "Hello Vulkan"};
-		VkPipeline vkPipeline{"shaders/vertShader.spv", "shaders/fragShader.spv" };
+		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
+		HdnPipeline hdnPipeline{"shaders/vertShader.spv", "shaders/fragShader.spv" };
 
 	};
 

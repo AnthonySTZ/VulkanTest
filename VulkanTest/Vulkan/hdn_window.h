@@ -5,16 +5,16 @@
 
 #include <string>
 
-namespace vk {
+namespace hdn {
 
-	class VkWindow {
+	class HdnWindow {
 
 	public:
-		VkWindow(int w, int h, std::string name);
-		~VkWindow();
+		HdnWindow(int w, int h, std::string name);
+		~HdnWindow();
 
-		VkWindow(const VkWindow&) = delete;
-		VkWindow& operator=(const VkWindow&) = delete;
+		HdnWindow(const HdnWindow&) = delete;
+		HdnWindow& operator=(const HdnWindow&) = delete;
 
 		bool shouldClose() { return glfwWindowShouldClose(window); };
 

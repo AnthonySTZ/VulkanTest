@@ -1,4 +1,4 @@
-#include "vk_device.h"
+#include "hdn_device.h"
 
 // std headers
 #include <cstring>
@@ -6,7 +6,7 @@
 #include <set>
 #include <unordered_set>
 
-namespace vk {
+namespace hdn {
 
     // local callback functions
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
@@ -48,7 +48,7 @@ namespace vk {
     }
 
     // class member functions
-    VkDevice::VkDevice(VkWindow& window) : window{ window } {
+    HdnDevice::HdnDevice(HdnWindow& window) : window{ window } {
         createInstance();
         setupDebugMessenger();
         createSurface();
@@ -57,7 +57,7 @@ namespace vk {
         createCommandPool();
     }
 
-    VkDevice::~VkDevice() {
+    HdnDevice::~HdnDevice() {
         vkDestroyCommandPool(device_, commandPool, nullptr);
         vkDestroyDevice(device_, nullptr);
 
@@ -69,7 +69,7 @@ namespace vk {
         vkDestroyInstance(instance, nullptr);
     }
 
-    void VkDevice::createInstance() {
+    void HdnDevice::createInstance() {
         if (enableValidationLayers && !checkValidationLayerSupport()) {
             throw std::runtime_error("validation layers requested, but not available!");
         }
@@ -110,7 +110,7 @@ namespace vk {
         hasGflwRequiredInstanceExtensions();
     }
 
-    void VkDevice::pickPhysicalDevice() {
+    void HdnDevice::pickPhysicalDevice() {
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
         if (deviceCount == 0) {
@@ -135,7 +135,7 @@ namespace vk {
         std::cout << "physical device: " << properties.deviceName << std::endl;
     }
 
-    void VkDevice::createLogicalDevice() {
+    void HdnDevice::createLogicalDevice() {
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -182,7 +182,7 @@ namespace vk {
         vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
     }
 
-    void VkDevice::createCommandPool() {
+    void HdnDevice::createCommandPool() {
         QueueFamilyIndices queueFamilyIndices = findPhysicalQueueFamilies();
 
         VkCommandPoolCreateInfo poolInfo = {};
@@ -196,9 +196,9 @@ namespace vk {
         }
     }
 
-    void VkDevice::createSurface() { window.createWindowSurface(instance, &surface_); }
+    void HdnDevice::createSurface() { window.createWindowSurface(instance, &surface_); }
 
-    bool VkDevice::isDeviceSuitable(VkPhysicalDevice device) {
+    bool HdnDevice::isDeviceSuitable(VkPhysicalDevice device) {
         QueueFamilyIndices indices = findQueueFamilies(device);
 
         bool extensionsSupported = checkDeviceExtensionSupport(device);
@@ -216,7 +216,7 @@ namespace vk {
             supportedFeatures.samplerAnisotropy;
     }
 
-    void VkDevice::populateDebugMessengerCreateInfo(
+    void HdnDevice::populateDebugMessengerCreateInfo(
         VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
         createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -229,7 +229,7 @@ namespace vk {
         createInfo.pUserData = nullptr;  // Optional
     }
 
-    void VkDevice::setupDebugMessenger() {
+    void HdnDevice::setupDebugMessenger() {
         if (!enableValidationLayers) return;
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
         populateDebugMessengerCreateInfo(createInfo);
@@ -238,7 +238,7 @@ namespace vk {
         }
     }
 
-    bool VkDevice::checkValidationLayerSupport() {
+    bool HdnDevice::checkValidationLayerSupport() {
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -263,7 +263,7 @@ namespace vk {
         return true;
     }
 
-    std::vector<const char*> VkDevice::getRequiredExtensions() {
+    std::vector<const char*> HdnDevice::getRequiredExtensions() {
         uint32_t glfwExtensionCount = 0;
         const char** glfwExtensions;
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -277,7 +277,7 @@ namespace vk {
         return extensions;
     }
 
-    void VkDevice::hasGflwRequiredInstanceExtensions() {
+    void HdnDevice::hasGflwRequiredInstanceExtensions() {
         uint32_t extensionCount = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
         std::vector<VkExtensionProperties> extensions(extensionCount);
@@ -300,7 +300,7 @@ namespace vk {
         }
     }
 
-    bool VkDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+    bool HdnDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) {
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -320,7 +320,7 @@ namespace vk {
         return requiredExtensions.empty();
     }
 
-    QueueFamilyIndices VkDevice::findQueueFamilies(VkPhysicalDevice device) {
+    QueueFamilyIndices HdnDevice::findQueueFamilies(VkPhysicalDevice device) {
         QueueFamilyIndices indices;
 
         uint32_t queueFamilyCount = 0;
@@ -351,7 +351,7 @@ namespace vk {
         return indices;
     }
 
-    SwapChainSupportDetails VkDevice::querySwapChainSupport(VkPhysicalDevice device) {
+    SwapChainSupportDetails HdnDevice::querySwapChainSupport(VkPhysicalDevice device) {
         SwapChainSupportDetails details;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface_, &details.capabilities);
 
@@ -377,7 +377,7 @@ namespace vk {
         return details;
     }
 
-    VkFormat VkDevice::findSupportedFormat(
+    VkFormat HdnDevice::findSupportedFormat(
         const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
         for (VkFormat format : candidates) {
             VkFormatProperties props;
@@ -394,7 +394,7 @@ namespace vk {
         throw std::runtime_error("failed to find supported format!");
     }
 
-    uint32_t VkDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+    uint32_t HdnDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
         for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
@@ -407,7 +407,7 @@ namespace vk {
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
-    void VkDevice::createBuffer(
+    void HdnDevice::createBuffer(
         VkDeviceSize size,
         VkBufferUsageFlags usage,
         VkMemoryPropertyFlags properties,
@@ -438,7 +438,7 @@ namespace vk {
         vkBindBufferMemory(device_, buffer, bufferMemory, 0);
     }
 
-    VkCommandBuffer VkDevice::beginSingleTimeCommands() {
+    VkCommandBuffer HdnDevice::beginSingleTimeCommands() {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -456,7 +456,7 @@ namespace vk {
         return commandBuffer;
     }
 
-    void VkDevice::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
+    void HdnDevice::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
         vkEndCommandBuffer(commandBuffer);
 
         VkSubmitInfo submitInfo{};
@@ -470,7 +470,7 @@ namespace vk {
         vkFreeCommandBuffers(device_, commandPool, 1, &commandBuffer);
     }
 
-    void VkDevice::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+    void HdnDevice::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferCopy copyRegion{};
@@ -482,7 +482,7 @@ namespace vk {
         endSingleTimeCommands(commandBuffer);
     }
 
-    void VkDevice::copyBufferToImage(
+    void HdnDevice::copyBufferToImage(
         VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount) {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -509,7 +509,7 @@ namespace vk {
         endSingleTimeCommands(commandBuffer);
     }
 
-    void VkDevice::createImageWithInfo(
+    void HdnDevice::createImageWithInfo(
         const VkImageCreateInfo& imageInfo,
         VkMemoryPropertyFlags properties,
         VkImage& image,

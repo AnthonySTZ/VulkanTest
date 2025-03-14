@@ -1,12 +1,13 @@
 #pragma once
 
-#include "vk_window.h"
+#include "hdn_window.h"
+#include <vulkan/vulkan.h>
 
 // std lib headers
 #include <string>
 #include <vector>
 
-namespace vk {
+namespace hdn {
 
     struct SwapChainSupportDetails {
         VkSurfaceCapabilitiesKHR capabilities;
@@ -22,7 +23,7 @@ namespace vk {
         bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
     };
 
-    class VkDevice {
+    class HdnDevice {
     public:
 #ifdef NDEBUG
         const bool enableValidationLayers = false;
@@ -30,14 +31,14 @@ namespace vk {
         const bool enableValidationLayers = true;
 #endif
 
-        VkDevice(VkWindow& window);
-        ~VkDevice();
+        HdnDevice(HdnWindow& window);
+        ~HdnDevice();
 
         // Not copyable or movable
-        VkDevice(const VkDevice&) = delete;
-        void operator=(const VkDevice&) = delete;
-        VkDevice(VkDevice&&) = delete;
-        VkDevice& operator=(VkDevice&&) = delete;
+        HdnDevice(const HdnDevice&) = delete;
+        void operator=(const HdnDevice&) = delete;
+        HdnDevice(HdnDevice&&) = delete;
+        HdnDevice& operator=(HdnDevice&&) = delete;
 
         VkCommandPool getCommandPool() { return commandPool; }
         VkDevice device() { return device_; }
@@ -93,7 +94,7 @@ namespace vk {
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-        VkWindow& window;
+        HdnWindow& window;
         VkCommandPool commandPool;
 
         VkDevice device_;

@@ -1,28 +1,28 @@
-#include "vk_window.h"
+#include "hdn_window.h"
 
 #include <stdexcept>
 
-namespace vk {
+namespace hdn {
 
-	VkWindow::VkWindow(int w, int h, std::string name): width{w}, height{h}, windowName{name}
+	HdnWindow::HdnWindow(int w, int h, std::string name): width{w}, height{h}, windowName{name}
 	{
 		initWindow();
 	}
 
-	VkWindow::~VkWindow()
+	HdnWindow::~HdnWindow()
 	{
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
 
-	void VkWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface)
+	void HdnWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface)
 	{
 		if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create window surface");
 		}
 	}
 
-	void VkWindow::initWindow() {
+	void HdnWindow::initWindow() {
 		glfwInit();
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Tell to glfw to use Vulkan instead of openGL
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);

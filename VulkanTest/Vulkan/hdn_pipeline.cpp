@@ -1,16 +1,16 @@
-#include "vk_pipeline.h"
+#include "hdn_pipeline.h"
 
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
 
-namespace vk {
-	VkPipeline::VkPipeline(const std::string& vertFilepath, const std::string& fragFilepath)
+namespace hdn {
+	HdnPipeline::HdnPipeline(const std::string& vertFilepath, const std::string& fragFilepath)
 	{
 		createGraphicsPipeline(vertFilepath, fragFilepath);
 	}
 
-	std::vector<char> VkPipeline::readFile(const std::string& filepath)
+	std::vector<char> HdnPipeline::readFile(const std::string& filepath)
 	{
 		std::ifstream file{ filepath, std::ios::ate | std::ios::binary };
 
@@ -28,7 +28,7 @@ namespace vk {
 		return buffer;
 	}
 
-	void VkPipeline::createGraphicsPipeline(const std::string& vertFilepath, const std::string& fragFilepath)
+	void HdnPipeline::createGraphicsPipeline(const std::string& vertFilepath, const std::string& fragFilepath)
 	{
 		std::vector<char> vertCode = readFile(vertFilepath);
 		std::vector<char> fragCode = readFile(fragFilepath);

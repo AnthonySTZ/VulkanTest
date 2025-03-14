@@ -3,12 +3,12 @@
 #include <string>
 #include <vector>
 
-namespace vk {
+namespace hdn {
 
-	class VkPipeline {
+	class HdnPipeline {
 
 	public:
-		VkPipeline(const std::string& vertFilepath, const std::string& fragFilepath);
+		HdnPipeline(const std::string& vertFilepath, const std::string& fragFilepath);
 
 	private:
 		

@@ -7,7 +7,7 @@
 
 int main() {
 
-	vk::App app{};
+	hdn::App app{};
 
 	try {
 		app.run();

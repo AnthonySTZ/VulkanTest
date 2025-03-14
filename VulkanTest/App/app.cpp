@@ -1,10 +1,10 @@
 #include "app.h"
 
-namespace vk {
+namespace hdn {
 
 	void App::run()
 	{
-		while (!vkWindow.shouldClose()) {
+		while (!hdnWindow.shouldClose()) {
 			glfwPollEvents();
 		}
 	}

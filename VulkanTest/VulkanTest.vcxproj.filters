@@ -21,24 +21,30 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Vulkan\vk_window.cpp">
+    <ClCompile Include="Vulkan\hdn_window.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="App\app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Vulkan\vk_pipeline.cpp">
+    <ClCompile Include="Vulkan\hdn_pipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\hdn_device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Vulkan\vk_window.h">
+    <ClInclude Include="Vulkan\hdn_window.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="App\app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vulkan\vk_pipeline.h">
+    <ClInclude Include="Vulkan\hdn_pipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\hdn_device.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
