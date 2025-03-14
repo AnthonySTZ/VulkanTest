@@ -1,5 +1,7 @@
 #include "vk_window.h"
 
+#include <stdexcept>
+
 namespace vk {
 
 	VkWindow::VkWindow(int w, int h, std::string name): width{w}, height{h}, windowName{name}
@@ -11,6 +13,13 @@ namespace vk {
 	{
 		glfwDestroyWindow(window);
 		glfwTerminate();
+	}
+
+	void VkWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface)
+	{
+		if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create window surface");
+		}
 	}
 
 	void VkWindow::initWindow() {
