@@ -3,7 +3,16 @@
 #include <stdexcept>
 
 namespace hdn {
-
+	App::App()
+	{
+		createPipelineLayout();
+		createPipeline();
+		createCommandBuffers();
+	}
+	App::~App()
+	{
+		vkDestroyPipelineLayout(hdnDevice.device(), pipelineLayout, nullptr);
+	}
 	void App::run()
 	{
 		while (!hdnWindow.shouldClose()) {
@@ -37,6 +46,14 @@ namespace hdn {
 			"Shaders/fragShader.spv",
 			pipelineConfig
 		);
+	}
+
+	void App::createCommandBuffers()
+	{
+	}
+
+	void App::drawFrame()
+	{
 	}
 
 }
