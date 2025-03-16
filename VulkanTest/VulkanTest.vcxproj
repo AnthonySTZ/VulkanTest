@@ -147,12 +147,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Vulkan\hdn_device.cpp" />
     <ClCompile Include="Vulkan\hdn_pipeline.cpp" />
+    <ClCompile Include="Vulkan\hdn_swap_chain.cpp" />
     <ClCompile Include="Vulkan\hdn_window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\app.h" />
     <ClInclude Include="Vulkan\hdn_device.h" />
     <ClInclude Include="Vulkan\hdn_pipeline.h" />
+    <ClInclude Include="Vulkan\hdn_swap_chain.h" />
     <ClInclude Include="Vulkan\hdn_window.h" />
   </ItemGroup>
   <ItemGroup>

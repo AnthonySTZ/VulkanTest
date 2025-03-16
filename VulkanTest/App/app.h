@@ -2,6 +2,7 @@
 
 #include "../Vulkan/hdn_window.h"
 #include "../Vulkan/hdn_pipeline.h"
+#include "../Vulkan/hdn_swap_chain.h"
 
 namespace hdn {
 
@@ -16,6 +17,7 @@ namespace hdn {
 	private:
 		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
 		HdnDevice hdnDevice{ hdnWindow };
+		HdnSwapChain hdnSwapChain{ hdnDevice, hdnWindow.getExtent() };
 		HdnPipeline hdnPipeline{ hdnDevice, "shaders/vertShader.spv", "shaders/fragShader.spv", HdnPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
 
 	};
