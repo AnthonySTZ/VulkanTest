@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include <stdexcept>
+#include <array>
 
 namespace hdn {
 	App::App()
@@ -50,6 +51,44 @@ namespace hdn {
 
 	void App::createCommandBuffers()
 	{
+		commandBuffers.resize(hdnSwapChain.imageCount());
+
+		VkCommandBufferAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+		allocInfo.commandPool = hdnDevice.getCommandPool();
+		allocInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
+
+		if (vkAllocateCommandBuffers(hdnDevice.device(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
+			throw std::runtime_error("Failed to Allocate Command buffers!");
+		}
+
+		for (int i = 0; commandBuffers.size(); i++) {
+			VkCommandBufferBeginInfo beginInfo{};
+			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+			if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
+				throw std::runtime_error("Failede to begin recording command buffer!");
+			}
+
+			VkRenderPassBeginInfo renderPassInfo{};
+			renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			renderPassInfo.renderPass = hdnSwapChain.getRenderPass();
+			renderPassInfo.framebuffer = hdnSwapChain.getFrameBuffer(i);
+
+			renderPassInfo.renderArea.offset = {0, 0};
+			renderPassInfo.renderArea.extent = hdnSwapChain.getSwapChainExtent();
+
+			std::array<VkClearValue, 2> clearValues{};
+			clearValues[0].color = { 0.1f, 0.1f, 0.f, 1.0f };
+			clearValues[1].depthStencil = { 1.0f, 0};
+			renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+			renderPassInfo.pClearValues = clearValues.data();
+
+			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+		}
+
 	}
 
 	void App::drawFrame()
