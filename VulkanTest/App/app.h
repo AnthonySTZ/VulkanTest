@@ -14,9 +14,19 @@ namespace hdn {
 		static constexpr int WIDTH = 1200;
 		static constexpr int HEIGHT = 800;
 
+		App();
+		~App();
+
+		App(const App&) = delete;
+		App& operator=(const App&) = delete;
 		void run();
 
 	private:
+		void createPipelineLayout();
+		void createPipeline();
+		void createCommandBuffers();
+		void drawFrame();
+
 		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
 		HdnDevice hdnDevice{ hdnWindow };
 		HdnSwapChain hdnSwapChain{ hdnDevice, hdnWindow.getExtent() };
