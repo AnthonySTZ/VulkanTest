@@ -172,8 +172,6 @@ namespace hdn {
 		viewportInfo.scissorCount = 1; 
 		viewportInfo.pScissors = &configInfo.scissor; 
 
-		VkPipelineColorBlendStateCreateInfo colorBlendInfo{}
-
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		pipelineInfo.stageCount = 2;
