@@ -4,6 +4,8 @@
 #include "../Vulkan/hdn_pipeline.h"
 #include "../Vulkan/hdn_swap_chain.h"
 
+#include <memory>
+#include <vector>
 namespace hdn {
 
 	class App {
@@ -18,8 +20,9 @@ namespace hdn {
 		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
 		HdnDevice hdnDevice{ hdnWindow };
 		HdnSwapChain hdnSwapChain{ hdnDevice, hdnWindow.getExtent() };
-		HdnPipeline hdnPipeline{ hdnDevice, "shaders/vertShader.spv", "shaders/fragShader.spv", HdnPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
-
+		std::unique_ptr<HdnPipeline> hdnPipeline;
+		VkPipelineLayout pipelineLayout;
+		std::vector<VkCommandBuffer> commandBuffers;
 	};
 
 }
