@@ -18,6 +18,7 @@ namespace hdn {
 	{
 		while (!hdnWindow.shouldClose()) {
 			glfwPollEvents();
+			drawFrame();
 		}
 	}
 
@@ -101,6 +102,16 @@ namespace hdn {
 
 	void App::drawFrame()
 	{
+		uint32_t imageIndex;
+		auto result = hdnSwapChain.acquireNextImage(&imageIndex);
+		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+			throw std::runtime_error("Failed to acquire swap chain image!");
+		}
+
+		result = hdnSwapChain.submitCommandBuffers(&commandBuffers[imageIndex], &imageIndex);
+		if (result != VK_SUCCESS) {
+			throw std::runtime_error("Failed to present swap chain image!");
+		}
 	}
 
 }
