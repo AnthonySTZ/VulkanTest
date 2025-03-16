@@ -26,4 +26,17 @@ namespace hdn {
 
 	}
 
+	void App::createPipeline()
+	{
+		PipelineConfigInfo pipelineConfig = HdnPipeline::defaultPipelineConfigInfo(hdnSwapChain.width(), hdnSwapChain.height());
+		pipelineConfig.renderPass = hdnSwapChain.getRenderPass();
+		pipelineConfig.pipelineLayout = pipelineLayout;
+		hdnPipeline = std::make_unique<HdnPipeline>(
+			hdnDevice,
+			"Shaders/vertShader.spv",
+			"Shaders/fragShader.spv",
+			pipelineConfig
+		);
+	}
+
 }
