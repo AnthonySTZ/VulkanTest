@@ -1,4 +1,5 @@
 #include "hdn_pipeline.h"
+#include "hdn_model.h"
 
 #include <fstream>
 #include <stdexcept>
@@ -155,12 +156,15 @@ namespace hdn {
 		shaderStages[1].pNext = nullptr;
 		shaderStages[1].pSpecializationInfo = nullptr;
 
+		auto bindingDescriptions = HdnModel::Vertex::getBindingDescriptions();
+		auto attributeDescriptions = HdnModel::Vertex::getAttributeDescriptions();
+
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputInfo.vertexAttributeDescriptionCount = 0;
-		vertexInputInfo.vertexBindingDescriptionCount = 0;
-		vertexInputInfo.pVertexAttributeDescriptions = nullptr;
-		vertexInputInfo.pVertexBindingDescriptions = nullptr;
+		vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size());
+		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+		vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
+		vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 		VkPipelineViewportStateCreateInfo viewportInfo{};
 		// Possible to enable multiple viewports
