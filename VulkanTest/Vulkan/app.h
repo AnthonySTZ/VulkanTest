@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Vulkan/hdn_window.h"
-#include "../Vulkan/hdn_pipeline.h"
-#include "../Vulkan/hdn_swap_chain.h"
+#include "hdn_window.h"
+#include "hdn_pipeline.h"
+#include "hdn_swap_chain.h"
 
 #include <memory>
 #include <vector>

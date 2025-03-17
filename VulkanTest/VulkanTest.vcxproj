@@ -143,7 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="App\app.cpp" />
+    <ClCompile Include="Vulkan\app.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Vulkan\hdn_device.cpp" />
     <ClCompile Include="Vulkan\hdn_pipeline.cpp" />
@@ -151,7 +151,7 @@
     <ClCompile Include="Vulkan\hdn_window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App\app.h" />
+    <ClInclude Include="Vulkan\app.h" />
     <ClInclude Include="Vulkan\hdn_device.h" />
     <ClInclude Include="Vulkan\hdn_pipeline.h" />
     <ClInclude Include="Vulkan\hdn_swap_chain.h" />
