@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <array>
+#include <iostream>
 
 namespace hdn {
 	App::App()
@@ -52,7 +53,7 @@ namespace hdn {
 
 	void App::createCommandBuffers()
 	{
-		commandBuffers.resize(hdnSwapChain.imageCount());
+		commandBuffers.resize(HdnSwapChain::MAX_FRAMES_IN_FLIGHT);
 
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -64,12 +65,12 @@ namespace hdn {
 			throw std::runtime_error("Failed to Allocate Command buffers!");
 		}
 
-		for (int i = 0; commandBuffers.size(); i++) {
+		for (int i = 0; i < commandBuffers.size(); i++) {
 			VkCommandBufferBeginInfo beginInfo{};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
 			if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
-				throw std::runtime_error("Failede to begin recording command buffer!");
+				throw std::runtime_error("Failed to begin recording command buffer!");
 			}
 
 			VkRenderPassBeginInfo renderPassInfo{};
