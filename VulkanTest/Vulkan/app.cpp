@@ -27,9 +27,9 @@ namespace hdn {
 	void App::loadModels()
 	{
 		std::vector<HdnModel::Vertex> vertices {
-			{{0.0f, -0.5f}},
-			{{0.5f, 0.5f}},
-			{{-0.5f, 0.5f}},
+			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f} },
+			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f} },
 		};
 
 		hdnModel = std::make_unique<HdnModel>(hdnDevice, vertices);
