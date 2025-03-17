@@ -53,7 +53,7 @@ namespace hdn {
 
 	void App::createCommandBuffers()
 	{
-		commandBuffers.resize(HdnSwapChain::MAX_FRAMES_IN_FLIGHT);
+		commandBuffers.resize(hdnSwapChain.imageCount());
 
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
