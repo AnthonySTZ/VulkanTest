@@ -7,6 +7,7 @@
 namespace hdn {
 	App::App()
 	{
+		loadModels();
 		createPipelineLayout();
 		createPipeline();
 		createCommandBuffers();
@@ -21,6 +22,17 @@ namespace hdn {
 			glfwPollEvents();
 			drawFrame();
 		}
+	}
+
+	void App::loadModels()
+	{
+		std::vector<HdnModel::Vertex> vertices {
+			{{0.0f, -0.5f}},
+			{{0.5f, 0.5f}},
+			{{-0.5f, 0.5f}},
+		};
+
+		hdnModel = std::make_unique<HdnModel>(hdnDevice, vertices);
 	}
 
 	void App::createPipelineLayout()
@@ -90,8 +102,8 @@ namespace hdn {
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 			hdnPipeline->bind(commandBuffers[i]);
-
-			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+			hdnModel->bind(commandBuffers[i]);
+			hdnModel->draw(commandBuffers[i]);
 
 			vkCmdEndRenderPass(commandBuffers[i]);
 			if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
