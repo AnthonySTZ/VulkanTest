@@ -33,7 +33,7 @@ namespace hdn {
 		~HdnPipeline();
 
 		HdnPipeline(const HdnPipeline&) = delete;
-		void operator=(const HdnPipeline&) = delete;
+		HdnPipeline& operator=(const HdnPipeline&) = delete;
 
 		void bind(VkCommandBuffer commandBuffer);
 

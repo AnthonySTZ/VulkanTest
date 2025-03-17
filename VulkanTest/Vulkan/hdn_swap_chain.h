@@ -19,7 +19,7 @@ namespace hdn {
         ~HdnSwapChain();
 
         HdnSwapChain(const HdnSwapChain&) = delete;
-        void operator=(const HdnSwapChain&) = delete;
+        HdnSwapChain& operator=(const HdnSwapChain&) = delete;
 
         VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
         VkRenderPass getRenderPass() { return renderPass; }

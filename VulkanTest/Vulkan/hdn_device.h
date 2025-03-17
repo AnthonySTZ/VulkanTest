@@ -36,7 +36,7 @@ namespace hdn {
 
         // Not copyable or movable
         HdnDevice(const HdnDevice&) = delete;
-        void operator=(const HdnDevice&) = delete;
+        HdnDevice& operator=(const HdnDevice&) = delete;
         HdnDevice(HdnDevice&&) = delete;
         HdnDevice& operator=(HdnDevice&&) = delete;
 
