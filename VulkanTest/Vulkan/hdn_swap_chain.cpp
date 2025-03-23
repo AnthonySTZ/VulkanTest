@@ -12,6 +12,17 @@ namespace hdn {
 
     HdnSwapChain::HdnSwapChain(HdnDevice& deviceRef, VkExtent2D extent)
         : device{ deviceRef }, windowExtent{ extent } {
+        init();
+    }
+
+    HdnSwapChain::HdnSwapChain(HdnDevice& deviceRef, VkExtent2D extent, std::shared_ptr<HdnSwapChain> previousSwapChain)
+        : device{ deviceRef }, windowExtent{ extent }, oldSwapChain{ previousSwapChain } {
+        init();
+
+        oldSwapChain = nullptr;
+    }
+
+    void HdnSwapChain::init() {
         createSwapChain();
         createImageViews();
         createRenderPass();
@@ -162,7 +173,7 @@ namespace hdn {
         createInfo.presentMode = presentMode;
         createInfo.clipped = VK_TRUE;
 
-        createInfo.oldSwapchain = VK_NULL_HANDLE;
+        createInfo.oldSwapchain = oldSwapChain == nullptr ? VK_NULL_HANDLE : oldSwapChain->swapChain;
 
         if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");

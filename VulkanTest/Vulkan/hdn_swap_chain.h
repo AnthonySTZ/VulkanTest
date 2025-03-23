@@ -6,6 +6,7 @@
 #include <vulkan/vulkan.h>
 
 // std lib headers
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -16,6 +17,7 @@ namespace hdn {
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
         HdnSwapChain(HdnDevice& deviceRef, VkExtent2D windowExtent);
+        HdnSwapChain(HdnDevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<HdnSwapChain> previousSwapChain);
         ~HdnSwapChain();
 
         HdnSwapChain(const HdnSwapChain&) = delete;
@@ -39,6 +41,8 @@ namespace hdn {
         VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
     private:
+        void init();
+
         void createSwapChain();
         void createImageViews();
         void createDepthResources();
@@ -69,6 +73,7 @@ namespace hdn {
         VkExtent2D windowExtent;
 
         VkSwapchainKHR swapChain;
+        std::shared_ptr<HdnSwapChain> oldSwapChain;
 
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;

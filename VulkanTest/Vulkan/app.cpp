@@ -52,6 +52,9 @@ namespace hdn {
 
 	void App::createPipeline()
 	{
+		assert(hdnSwapChain != nullptr && "Cannot create Pipeline before swapChain!");
+		assert(pipelineLayout != nullptr && "Cannot create Pipeline before pipelineLayout!");
+
 		PipelineConfigInfo pipelineConfig{};
 		HdnPipeline::defaultPipelineConfigInfo(pipelineConfig);
 		pipelineConfig.renderPass = hdnSwapChain->getRenderPass();
@@ -73,8 +76,16 @@ namespace hdn {
 		}
 
 		vkDeviceWaitIdle(hdnDevice.device());
-		hdnSwapChain.reset(nullptr);
-		hdnSwapChain = std::make_unique<HdnSwapChain>(hdnDevice, extent);
+		if (hdnSwapChain == nullptr) {
+			hdnSwapChain = std::make_unique<HdnSwapChain>(hdnDevice, extent);
+		}
+		else {
+			hdnSwapChain = std::make_unique<HdnSwapChain>(hdnDevice, extent, std::move(hdnSwapChain));
+			if (hdnSwapChain->imageCount() != commandBuffers.size()) {
+				freeCommandBuffers();
+				createCommandBuffers();
+			}
+		}
 		createPipeline();
 	}
 
@@ -92,6 +103,12 @@ namespace hdn {
 			throw std::runtime_error("Failed to Allocate Command buffers!");
 		}
 
+	}
+
+	void App::freeCommandBuffers()
+	{
+		vkFreeCommandBuffers(hdnDevice.device(), hdnDevice.getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+		commandBuffers.clear();
 	}
 
 	void App::recordCommandBuffer(int imageIndex)
