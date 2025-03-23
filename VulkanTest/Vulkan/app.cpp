@@ -5,8 +5,13 @@
 #include <iostream>
 
 namespace hdn {
+
+	App* App::appPointer = nullptr;
+
 	App::App()
 	{
+		appPointer = this;
+		setWindowResizeRefresh();
 		loadModels();
 		createPipelineLayout();
 		recreateSwapChain();
@@ -15,7 +20,25 @@ namespace hdn {
 	App::~App()
 	{
 		vkDestroyPipelineLayout(hdnDevice.device(), pipelineLayout, nullptr);
+		appPointer = nullptr;
 	}
+
+	void App::setWindowResizeRefresh() {
+		glfwSetWindowUserPointer(hdnWindow.getWindow(), this);
+		glfwSetFramebufferSizeCallback(hdnWindow.getWindow(), framebufferResizeCallback);
+	}
+
+	void App::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+		auto hdnWindow = reinterpret_cast<HdnWindow*> (glfwGetWindowUserPointer(window));
+		hdnWindow->frameBufferResized = true;
+		hdnWindow->setWidth(width);
+		hdnWindow->setHeight(height);
+
+		hdnWindow->resetWindowResizedFlag();
+		appPointer->recreateSwapChain();
+		appPointer->drawFrame();
+	}
+
 	void App::run()
 	{
 		while (!hdnWindow.shouldClose()) {
@@ -174,11 +197,6 @@ namespace hdn {
 
 		recordCommandBuffer(imageIndex);
 		result = hdnSwapChain->submitCommandBuffers(&commandBuffers[imageIndex], &imageIndex);
-		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || hdnWindow.wasWindowResized()) {
-			hdnWindow.resetWindowResizedFlag();
-			recreateSwapChain();
-			return;
-		}
 
 		if (result != VK_SUCCESS) {
 			throw std::runtime_error("Failed to present swap chain image!");

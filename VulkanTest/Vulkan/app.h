@@ -15,6 +15,8 @@ namespace hdn {
 		static constexpr int WIDTH = 800;
 		static constexpr int HEIGHT = 800;
 
+		static App* appPointer;
+
 		App();
 		~App();
 
@@ -23,6 +25,8 @@ namespace hdn {
 		void run();
 
 	private:
+		void setWindowResizeRefresh();
+		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 		void loadModels();
 		void createPipelineLayout();
 		void createPipeline();

@@ -20,15 +20,18 @@ namespace hdn {
 		VkExtent2D getExtent() { return { static_cast<uint32_t>(width), static_cast<uint32_t>(height )}; };
 		bool wasWindowResized() { return frameBufferResized; };
 		void resetWindowResizedFlag() { frameBufferResized = false; };
+		GLFWwindow* getWindow() { return window; };
+		void setWidth(int newWidth) { width = newWidth; };
+		void setHeight(int newHeight) { height = newHeight; };
+
+		bool frameBufferResized = false;
 
 		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
 	private:
-		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 		void initWindow();
 		
-		int width, height;
-		bool frameBufferResized = false;
+		int width, height;	
 
 		std::string windowName;
 		GLFWwindow* window;
