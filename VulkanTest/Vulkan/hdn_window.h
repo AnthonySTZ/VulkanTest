@@ -18,14 +18,18 @@ namespace hdn {
 
 		bool shouldClose() { return glfwWindowShouldClose(window); };
 		VkExtent2D getExtent() { return { static_cast<uint32_t>(width), static_cast<uint32_t>(height )}; };
+		bool wasWindowResized() { return frameBufferResized; };
+		void resetWindowResizedFlage() { frameBufferResized = false; };
 
 		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
 	private:
-
+		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 		void initWindow();
 		
-		const int width, height;
+		int width, height;
+		bool frameBufferResized = false;
+
 		std::string windowName;
 		GLFWwindow* window;
 

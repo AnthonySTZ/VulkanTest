@@ -22,10 +22,19 @@ namespace hdn {
 		}
 	}
 
+	void HdnWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height)
+	{
+		auto hdnWindow = reinterpret_cast<HdnWindow*> (glfwGetWindowUserPointer(window));
+		hdnWindow->frameBufferResized = true;
+		hdnWindow->width = width;
+		hdnWindow->height = height;
+
+	}
+
 	void HdnWindow::initWindow() {
 		glfwInit();
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Tell to glfw to use Vulkan instead of openGL
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
 		window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
 	}
