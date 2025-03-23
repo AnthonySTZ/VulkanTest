@@ -22,6 +22,8 @@ namespace hdn {
 		uint32_t subpass = 0;
 	};
 
+	
+
 	class HdnPipeline {
 
 	public:
@@ -32,6 +34,7 @@ namespace hdn {
 			const PipelineConfigInfo& configInfo);
 		~HdnPipeline();
 
+		HdnPipeline() = default;
 		HdnPipeline(const HdnPipeline&) = delete;
 		HdnPipeline& operator=(const HdnPipeline&) = delete;
 

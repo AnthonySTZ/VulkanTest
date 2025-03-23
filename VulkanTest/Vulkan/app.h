@@ -28,10 +28,12 @@ namespace hdn {
 		void createPipeline();
 		void createCommandBuffers();
 		void drawFrame();
+		void recreateSwapChain();
+		void recordCommandBuffer(int imageIndex);
 
 		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
 		HdnDevice hdnDevice{ hdnWindow };
-		HdnSwapChain hdnSwapChain{ hdnDevice, hdnWindow.getExtent() };
+		std::unique_ptr<HdnSwapChain> hdnSwapChain;
 		std::unique_ptr<HdnPipeline> hdnPipeline;
 		VkPipelineLayout pipelineLayout;
 		std::vector<VkCommandBuffer> commandBuffers;

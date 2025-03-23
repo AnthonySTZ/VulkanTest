@@ -9,7 +9,7 @@ namespace hdn {
 	{
 		loadModels();
 		createPipelineLayout();
-		createPipeline();
+		recreateSwapChain();
 		createCommandBuffers();
 	}
 	App::~App()
@@ -52,8 +52,8 @@ namespace hdn {
 
 	void App::createPipeline()
 	{
-		PipelineConfigInfo pipelineConfig = HdnPipeline::defaultPipelineConfigInfo(hdnSwapChain.width(), hdnSwapChain.height());
-		pipelineConfig.renderPass = hdnSwapChain.getRenderPass();
+		PipelineConfigInfo pipelineConfig = HdnPipeline::defaultPipelineConfigInfo(hdnSwapChain->width(), hdnSwapChain->height());
+		pipelineConfig.renderPass = hdnSwapChain->getRenderPass();
 		pipelineConfig.pipelineLayout = pipelineLayout;
 		hdnPipeline = std::make_unique<HdnPipeline>(
 			hdnDevice,
@@ -63,9 +63,23 @@ namespace hdn {
 		);
 	}
 
+	void App::recreateSwapChain()
+	{
+		auto extent = hdnWindow.getExtent();
+		while (extent.width == 0 || extent.height == 0) {
+			extent = hdnWindow.getExtent();
+			glfwWaitEvents();
+		}
+
+		vkDeviceWaitIdle(hdnDevice.device());
+		hdnSwapChain.reset(nullptr);
+		hdnSwapChain = std::make_unique<HdnSwapChain>(hdnDevice, extent);
+		createPipeline();
+	}
+
 	void App::createCommandBuffers()
 	{
-		commandBuffers.resize(hdnSwapChain.imageCount());
+		commandBuffers.resize(hdnSwapChain->imageCount());
 
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -77,51 +91,65 @@ namespace hdn {
 			throw std::runtime_error("Failed to Allocate Command buffers!");
 		}
 
-		for (int i = 0; i < commandBuffers.size(); i++) {
-			VkCommandBufferBeginInfo beginInfo{};
-			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	}
 
-			if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
-				throw std::runtime_error("Failed to begin recording command buffer!");
-			}
+	void App::recordCommandBuffer(int imageIndex)
+	{
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-			VkRenderPassBeginInfo renderPassInfo{};
-			renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassInfo.renderPass = hdnSwapChain.getRenderPass();
-			renderPassInfo.framebuffer = hdnSwapChain.getFrameBuffer(i);
-
-			renderPassInfo.renderArea.offset = {0, 0};
-			renderPassInfo.renderArea.extent = hdnSwapChain.getSwapChainExtent();
-
-			std::array<VkClearValue, 2> clearValues{};
-			clearValues[0].color = { 0.1f, 0.1f, 0.f, 1.0f };
-			clearValues[1].depthStencil = { 1.0f, 0};
-			renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-			renderPassInfo.pClearValues = clearValues.data();
-
-			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-			hdnPipeline->bind(commandBuffers[i]);
-			hdnModel->bind(commandBuffers[i]);
-			hdnModel->draw(commandBuffers[i]);
-
-			vkCmdEndRenderPass(commandBuffers[i]);
-			if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
-				throw std::runtime_error("Failed to end command buffer!");
-			}
+		if (vkBeginCommandBuffer(commandBuffers[imageIndex], &beginInfo) != VK_SUCCESS) {
+			throw std::runtime_error("Failed to begin recording command buffer!");
 		}
 
+		VkRenderPassBeginInfo renderPassInfo{};
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassInfo.renderPass = hdnSwapChain->getRenderPass();
+		renderPassInfo.framebuffer = hdnSwapChain->getFrameBuffer(imageIndex);
+
+		renderPassInfo.renderArea.offset = { 0, 0 };
+		renderPassInfo.renderArea.extent = hdnSwapChain->getSwapChainExtent();
+
+		std::array<VkClearValue, 2> clearValues{};
+		clearValues[0].color = { 0.1f, 0.1f, 0.f, 1.0f };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+		renderPassInfo.pClearValues = clearValues.data();
+
+		vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+		hdnPipeline->bind(commandBuffers[imageIndex]);
+		hdnModel->bind(commandBuffers[imageIndex]);
+		hdnModel->draw(commandBuffers[imageIndex]);
+
+		vkCmdEndRenderPass(commandBuffers[imageIndex]);
+		if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS) {
+			throw std::runtime_error("Failed to end command buffer!");
+		}
 	}
 
 	void App::drawFrame()
 	{
 		uint32_t imageIndex;
-		auto result = hdnSwapChain.acquireNextImage(&imageIndex);
+		auto result = hdnSwapChain->acquireNextImage(&imageIndex);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+			recreateSwapChain();
+			return;
+		}
+
 		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 			throw std::runtime_error("Failed to acquire swap chain image!");
 		}
 
-		result = hdnSwapChain.submitCommandBuffers(&commandBuffers[imageIndex], &imageIndex);
+		recordCommandBuffer(imageIndex);
+		result = hdnSwapChain->submitCommandBuffers(&commandBuffers[imageIndex], &imageIndex);
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || hdnWindow.wasWindowResized()) {
+			hdnWindow.resetWindowResizedFlag();
+			recreateSwapChain();
+			return;
+		}
+
 		if (result != VK_SUCCESS) {
 			throw std::runtime_error("Failed to present swap chain image!");
 		}
