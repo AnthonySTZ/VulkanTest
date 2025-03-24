@@ -11,6 +11,7 @@
 namespace hdn {
 
 	struct SimplePushConstantData {
+		glm::mat2 tranform{ 1.0f }; // Identity matrix
 		glm::vec2 offset;
 		alignas(16) glm::vec3 color;
 	};
