@@ -8,9 +8,11 @@ namespace hdn {
 
 	struct Transform2dComponent {
 		glm::vec2 translation;
+		glm::vec2 scale{ 1.f, 1.f };
 
 		glm::mat2 mat2() {
-			return glm::mat2{ 1.f };
+			glm::mat2 scaleMat{ {scale.x, 0.f}, {0.f, scale.y} };
+			return scaleMat;
 		};
 	};
 

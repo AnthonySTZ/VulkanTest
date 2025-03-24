@@ -70,6 +70,7 @@ namespace hdn {
 		triangle.model = hdnModel;
 		triangle.color = { .1f, 0.8f, .1f };
 		triangle.transform2d.translation.x = .2f;
+		triangle.transform2d.scale = { 1.5f, 0.5f };
 		gameObjects.push_back(std::move(triangle));
 ;	}
 
