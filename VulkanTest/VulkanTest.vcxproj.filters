@@ -59,6 +59,9 @@
     <ClInclude Include="Vulkan\hdn_model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Vulkan\hdn_game_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\vertShader.vert" />

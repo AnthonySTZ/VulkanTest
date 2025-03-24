@@ -22,7 +22,7 @@ namespace hdn {
 	{
 		appPointer = this;
 		setWindowResizeRefresh();
-		loadModels();
+		loadGameObjects();
 		createPipelineLayout();
 		recreateSwapChain();
 		createCommandBuffers();
@@ -57,7 +57,7 @@ namespace hdn {
 		}
 	}
 
-	void App::loadModels()
+	void App::loadGameObjects()
 	{
 		std::vector<HdnModel::Vertex> vertices {
 			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
@@ -65,8 +65,13 @@ namespace hdn {
 			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f} },
 		};
 
-		hdnModel = std::make_unique<HdnModel>(hdnDevice, vertices);
-	}
+		auto hdnModel = std::make_shared<HdnModel>(hdnDevice, vertices);
+		auto triangle = HdnGameObject::createGameObject();
+		triangle.model = hdnModel;
+		triangle.color = { .1f, 0.8f, .1f };
+		triangle.transform2d.translation.x = .2f;
+		gameObjects.push_back(std::move(triangle));
+;	}
 
 	void App::createPipelineLayout()
 	{
@@ -191,24 +196,28 @@ namespace hdn {
 		vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
 		vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
 
-
-		hdnPipeline->bind(commandBuffers[imageIndex]);
-		hdnModel->bind(commandBuffers[imageIndex]);
-
-		for (int j = 0; j < 4; j++) {
-			SimplePushConstantData push{};
-			push.offset = { -0.5f + frame * 0.0001f, -0.4f + j * 0.25f };
-			push.color = { 0.0f, 0.0f, 0.2f + 0.2f * j };
-			vkCmdPushConstants(commandBuffers[imageIndex], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, 
-				sizeof(SimplePushConstantData), &push);
-
-			hdnModel->draw(commandBuffers[imageIndex]);
-		}
-
+		renderGameObjects(commandBuffers[imageIndex]);
 
 		vkCmdEndRenderPass(commandBuffers[imageIndex]);
 		if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS) {
 			throw std::runtime_error("Failed to end command buffer!");
+		}
+	}
+
+	void App::renderGameObjects(VkCommandBuffer commandBuffer)
+	{
+		hdnPipeline->bind(commandBuffer);
+
+		for (auto& obj : gameObjects) {
+			SimplePushConstantData push{};
+			push.offset = obj.transform2d.translation;
+			push.color = obj.color;
+			push.tranform = obj.transform2d.mat2();
+			vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+				sizeof(SimplePushConstantData), &push);
+
+			obj.model->bind(commandBuffer);
+			obj.model->draw(commandBuffer);
 		}
 	}
 

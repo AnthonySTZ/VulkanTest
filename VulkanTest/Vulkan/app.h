@@ -3,7 +3,7 @@
 #include "hdn_window.h"
 #include "hdn_pipeline.h"
 #include "hdn_swap_chain.h"
-#include "hdn_model.h"
+#include "hdn_game_object.h"
 
 #include <memory>
 #include <vector>
@@ -27,7 +27,7 @@ namespace hdn {
 	private:
 		void setWindowResizeRefresh();
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
-		void loadModels();
+		void loadGameObjects();
 		void createPipelineLayout();
 		void createPipeline();
 		void createCommandBuffers();
@@ -35,6 +35,7 @@ namespace hdn {
 		void drawFrame();
 		void recreateSwapChain();
 		void recordCommandBuffer(int imageIndex);
+		void renderGameObjects(VkCommandBuffer commandBuffer);
 
 		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
 		HdnDevice hdnDevice{ hdnWindow };
@@ -42,7 +43,7 @@ namespace hdn {
 		std::unique_ptr<HdnPipeline> hdnPipeline;
 		VkPipelineLayout pipelineLayout;
 		std::vector<VkCommandBuffer> commandBuffers;
-		std::unique_ptr<HdnModel> hdnModel;
+		std::vector<HdnGameObject> gameObjects;
 	};
 
 }
