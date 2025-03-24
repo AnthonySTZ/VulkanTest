@@ -1,10 +1,19 @@
 #include "app.h"
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+
 #include <stdexcept>
 #include <array>
 #include <iostream>
 
 namespace hdn {
+
+	struct SimplePushConstantData {
+		glm::vec2 offset;
+		alignas(16) glm::vec3 color;
+	};
 
 	App* App::appPointer = nullptr;
 
@@ -60,12 +69,19 @@ namespace hdn {
 
 	void App::createPipelineLayout()
 	{
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(SimplePushConstantData);
+
+
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = 0;
 		pipelineLayoutInfo.pSetLayouts = nullptr;
-		pipelineLayoutInfo.pushConstantRangeCount= 0;
-		pipelineLayoutInfo.pPushConstantRanges = nullptr;
+		pipelineLayoutInfo.pushConstantRangeCount= 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 		if (vkCreatePipelineLayout(hdnDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
 			throw std::runtime_error("Failed to create PipelineLayout!");
 		}
@@ -173,7 +189,17 @@ namespace hdn {
 
 		hdnPipeline->bind(commandBuffers[imageIndex]);
 		hdnModel->bind(commandBuffers[imageIndex]);
-		hdnModel->draw(commandBuffers[imageIndex]);
+
+		for (int j = 0; j < 4; j++) {
+			SimplePushConstantData push{};
+			push.offset = { 0.0f, -0.4f + j * 0.25f };
+			push.color = { 0.0f, 0.0f, 0.2f + 0.2f * j };
+			vkCmdPushConstants(commandBuffers[imageIndex], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, 
+				sizeof(SimplePushConstantData), &push);
+
+			hdnModel->draw(commandBuffers[imageIndex]);
+		}
+
 
 		vkCmdEndRenderPass(commandBuffers[imageIndex]);
 		if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS) {
