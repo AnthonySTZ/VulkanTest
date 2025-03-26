@@ -12,11 +12,24 @@ project(vulkan)
 # Find source files and headers
 file(GLOB_RECURSE SRC_FILES src/*.cpp)
 file(GLOB_RECURSE HEADERS src/*.h)
-file(GLOB_RECURSE SHADERS src/Shaders/*.spv)
 
 # Create the executable
 add_executable(vulkan ${SRC_FILES} ${HEADERS})
-file(COPY ${SHADERS} DESTINATION ${CMAKE_BINARY_DIR}/Shaders)
+
+add_custom_target(compile_shaders
+    COMMAND compile_shaders.bat
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Compiling shaders..."
+    VERBATIM
+)
+
+add_dependencies(vulkan compile_shaders)
+
+add_custom_command(
+    TARGET vulkan PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/src/Shaders ${CMAKE_BINARY_DIR}/Shaders
+    COMMENT "Copying compiled shaders..."
+)
 
 # IMPORT GLFW
 if(DEFINED ENV{GLFW})
