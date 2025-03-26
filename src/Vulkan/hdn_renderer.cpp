@@ -36,17 +36,13 @@ namespace hdn {
 				throw std::runtime_error("Swap chain image(or depth) format has changed!");
 			}
 
-			if (hdnSwapChain->imageCount() != commandBuffers.size()) {
-				freeCommandBuffers();
-				createCommandBuffers();
-			}
 		}
 	}
 
     
     void HdnRenderer::createCommandBuffers()
     {
-		commandBuffers.resize(hdnSwapChain->imageCount());
+		commandBuffers.resize(HdnSwapChain::MAX_FRAMES_IN_FLIGHT);
 
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -109,6 +105,7 @@ namespace hdn {
 		}
 
         isFrameStarted = false;
+		currentFrameIndex = (currentFrameIndex + 1) % HdnSwapChain::MAX_FRAMES_IN_FLIGHT;
     }
 
     void HdnRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer)
