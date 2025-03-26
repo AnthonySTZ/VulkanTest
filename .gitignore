@@ -447,4 +447,4 @@ FodyWeavers.xsd
 .history
 .ionide
 
-build/*
+build
