@@ -32,11 +32,11 @@ namespace hdn {
         void endFrame();
         void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
         void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
+        void recreateSwapChain();
 
 	private:
 		void createCommandBuffers();
 		void freeCommandBuffers();
-		void recreateSwapChain();
 
 		HdnWindow& hdnWindow;
 		HdnDevice& hdnDevice;

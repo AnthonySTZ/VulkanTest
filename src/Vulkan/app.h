@@ -2,7 +2,7 @@
 
 #include "hdn_window.h"
 #include "hdn_pipeline.h"
-#include "hdn_swap_chain.h"
+#include "hdn_renderer.h"
 #include "hdn_game_object.h"
 
 #include <memory>
@@ -29,20 +29,16 @@ namespace hdn {
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 		void loadGameObjects();
 		void createPipelineLayout();
-		void createPipeline();
-		void createCommandBuffers();
-		void freeCommandBuffers();
 		void drawFrame();
-		void recreateSwapChain();
-		void recordCommandBuffer(int imageIndex);
+		void createPipeline();
 		void renderGameObjects(VkCommandBuffer commandBuffer);
 
 		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
 		HdnDevice hdnDevice{ hdnWindow };
-		std::unique_ptr<HdnSwapChain> hdnSwapChain;
+		HdnRenderer hdnRenderer{hdnWindow, hdnDevice};
+
 		std::unique_ptr<HdnPipeline> hdnPipeline;
 		VkPipelineLayout pipelineLayout;
-		std::vector<VkCommandBuffer> commandBuffers;
 		std::vector<HdnGameObject> gameObjects;
 	};
 
