@@ -29,7 +29,13 @@ namespace hdn {
 			hdnSwapChain = std::make_unique<HdnSwapChain>(hdnDevice, extent);
 		}
 		else {
-			hdnSwapChain = std::make_unique<HdnSwapChain>(hdnDevice, extent, std::move(hdnSwapChain));
+			std::shared_ptr<HdnSwapChain> oldSwapChain = std::move(hdnSwapChain);
+			hdnSwapChain = std::make_unique<HdnSwapChain>(hdnDevice, extent, oldSwapChain);
+
+			if (!oldSwapChain->compareSwapFormats(*hdnSwapChain.get())) {
+				throw std::runtime_error("Swap chain image(or depth) format has changed!");
+			}
+
 			if (hdnSwapChain->imageCount() != commandBuffers.size()) {
 				freeCommandBuffers();
 				createCommandBuffers();
