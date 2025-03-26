@@ -1,9 +1,9 @@
 #pragma once
 
 #include "hdn_window.h"
-#include "hdn_pipeline.h"
 #include "hdn_renderer.h"
 #include "hdn_game_object.h"
+#include "simple_render_system.h"
 
 #include <memory>
 #include <vector>
@@ -28,17 +28,13 @@ namespace hdn {
 		void setWindowResizeRefresh();
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 		void loadGameObjects();
-		void createPipelineLayout();
 		void drawFrame();
-		void createPipeline();
-		void renderGameObjects(VkCommandBuffer commandBuffer);
 
 		HdnWindow hdnWindow{WIDTH, HEIGHT, "Hello Vulkan"};
 		HdnDevice hdnDevice{ hdnWindow };
 		HdnRenderer hdnRenderer{hdnWindow, hdnDevice};
 
-		std::unique_ptr<HdnPipeline> hdnPipeline;
-		VkPipelineLayout pipelineLayout;
+		SimpleRenderSystem simpleRenderSystem{hdnDevice, hdnRenderer.getSwapChainRenderPass()};
 		std::vector<HdnGameObject> gameObjects;
 	};
 
