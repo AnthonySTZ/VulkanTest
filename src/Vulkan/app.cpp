@@ -107,12 +107,14 @@ namespace hdn {
 		HdnPipeline::defaultPipelineConfigInfo(pipelineConfig);
 		pipelineConfig.renderPass = hdnSwapChain->getRenderPass();
 		pipelineConfig.pipelineLayout = pipelineLayout;
+		std::cout << "Loading Shaders..\n";
 		hdnPipeline = std::make_unique<HdnPipeline>(
 			hdnDevice,
 			"Shaders/vertShader.spv",
 			"Shaders/fragShader.spv",
 			pipelineConfig
 		);
+		std::cout << "Shaders loaded\n";
 	}
 
 	void App::recreateSwapChain()
