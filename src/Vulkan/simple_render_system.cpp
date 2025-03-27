@@ -66,7 +66,7 @@ namespace hdn {
 		std::cout << "Shaders loaded\n";
 	}
 
-	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<HdnGameObject> &gameObjects)
+	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<HdnGameObject> &gameObjects, const HdnCamera &camera)
 	{
 		hdnPipeline->bind(commandBuffer);
 
@@ -76,7 +76,7 @@ namespace hdn {
 
 			SimplePushConstantData push{};
 			push.color = obj.color;
-			push.tranform = obj.transform.mat4();
+			push.tranform = camera.getProjection() * obj.transform.mat4();
 
 			vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
 				sizeof(SimplePushConstantData), &push);
