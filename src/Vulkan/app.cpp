@@ -49,6 +49,7 @@ namespace hdn {
 	{
 		float aspect = hdnRenderer.getAspectRation();
 		// camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+		camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
 		camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 10.f);
 
 		while (!hdnWindow.shouldClose()) {
