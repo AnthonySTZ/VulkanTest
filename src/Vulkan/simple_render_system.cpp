@@ -12,8 +12,7 @@
 namespace hdn {
 
 	struct SimplePushConstantData {
-		glm::mat2 tranform{ 1.0f }; // Identity matrix
-		glm::vec2 offset;
+		glm::mat4 tranform{ 1.0f }; // Identity matrix
 		alignas(16) glm::vec3 color;
 	};
 
@@ -72,10 +71,12 @@ namespace hdn {
 		hdnPipeline->bind(commandBuffer);
 
 		for (auto& obj : gameObjects) {
+			obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.001f, glm::two_pi<float>());
+
 			SimplePushConstantData push{};
-			push.offset = obj.transform2d.translation;
 			push.color = obj.color;
-			push.tranform = obj.transform2d.mat2();
+			push.tranform = obj.transform.mat4();
+
 			vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
 				sizeof(SimplePushConstantData), &push);
 
