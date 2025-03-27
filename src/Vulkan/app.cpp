@@ -39,12 +39,15 @@ namespace hdn {
 
 		hdnWindow->resetWindowResizedFlag();
 		appPointer->hdnRenderer.recreateSwapChain();
+		float aspect = appPointer->hdnRenderer.getAspectRation();
+		appPointer->camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
 		appPointer->drawFrame();
 	}
 
 	void App::run()
 	{
-		camera.setOrthographicProjection(-1, 1, -1, 1, -1, 1);
+		float aspect = hdnRenderer.getAspectRation();
+		camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
 
 		while (!hdnWindow.shouldClose()) {
 			glfwPollEvents();
