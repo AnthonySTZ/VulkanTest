@@ -1,5 +1,6 @@
 #include "app.h"
 
+#include "hdn_camera.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -43,6 +44,7 @@ namespace hdn {
 
 	void App::run()
 	{
+		camera.setOrthographicProjection(-1, 1, -1, 1, -1, 1);
 
 		while (!hdnWindow.shouldClose()) {
 			glfwPollEvents();
@@ -53,7 +55,7 @@ namespace hdn {
 	void App::drawFrame() {
 		if (auto commandBuffer = hdnRenderer.beginFrame()){
 			hdnRenderer.beginSwapChainRenderPass(commandBuffer);
-			simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects);
+			simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
 			hdnRenderer.endSwapChainRenderPass(commandBuffer);
 			hdnRenderer.endFrame();
 		}
