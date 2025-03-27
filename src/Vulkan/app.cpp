@@ -40,14 +40,16 @@ namespace hdn {
 		hdnWindow->resetWindowResizedFlag();
 		appPointer->hdnRenderer.recreateSwapChain();
 		float aspect = appPointer->hdnRenderer.getAspectRation();
-		appPointer->camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+		// appPointer->camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+		appPointer->camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 10.f);
 		appPointer->drawFrame();
 	}
 
 	void App::run()
 	{
 		float aspect = hdnRenderer.getAspectRation();
-		camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+		// camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+		camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 10.f);
 
 		while (!hdnWindow.shouldClose()) {
 			glfwPollEvents();
@@ -127,7 +129,7 @@ namespace hdn {
 		std::shared_ptr<HdnModel> hdnModel = createCubeModel(hdnDevice, {0.f, 0.f, 0.f});
 		auto cube = HdnGameObject::createGameObject();
 		cube.model = hdnModel;
-		cube.transform.translation = {0.f, 0.f, .5f};
+		cube.transform.translation = {0.f, 0.f, 2.f};
 		cube.transform.scale = {.5f, .5f, .5f};
 		gameObjects.push_back(std::move(cube));
 		
