@@ -2,22 +2,27 @@
 
 #include "hdn_model.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <memory>
 
 namespace hdn {
 
-	struct Transform2dComponent {
-		glm::vec2 translation;
-		glm::vec2 scale{ 1.f, 1.f };
-		float rotation;
+	struct TransformComponent {
+		glm::vec3 translation;
+		glm::vec3 scale{ 1.f, 1.f, 1.f };
+		glm::vec3 rotation{};
 
-		glm::mat2 mat2() const {
-			const float s = glm::sin(rotation);
-			const float c = glm::cos(rotation);
+		// T * Ry * Rx * Rz * Scale
+		glm::mat4 mat4() const {			
+			auto transform = glm::translate(glm::mat4{1.f}, translation);
 
-			glm::mat2 rotMat{ {c, s}, {-s, c} }; // Glm uses column instead of rows
-			glm::mat2 scaleMat{ {scale.x, 0.f}, {0.f, scale.y} };
-			return rotMat * scaleMat;
+			transform = glm::rotate(transform, rotation.y, {0.f, 1.f, 0.f});
+			transform = glm::rotate(transform, rotation.x, {1.f, 0.f, 0.f});
+			transform = glm::rotate(transform, rotation.z, {0.f, 0.f, 1.f});
+
+			transform = glm::scale(transform, scale);
+			return transform;
 		};
 	};
 
@@ -39,7 +44,7 @@ namespace hdn {
 
 		std::shared_ptr<HdnModel> model{};
 		glm::vec3 color{};
-		Transform2dComponent transform2d{};
+		TransformComponent transform{};
 
 	private:
 		HdnGameObject(id_t objId) : id{ objId } {};
