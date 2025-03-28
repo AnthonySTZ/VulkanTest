@@ -1,12 +1,28 @@
 #include "hdn_model.h"
 
+#include "hdn_utils.h"
+
 // libs
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
 
 #include <cassert>
 #include <cstring>
 #include <iostream>
+#include <unordered_map>
+
+namespace std {
+	template <>
+	struct hash<hdn::HdnModel::Vertex> {
+		size_t operator()(hdn::HdnModel::Vertex const &vertex) const {
+			size_t seed = 0;
+			hdn::hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+			return seed;
+		}
+	};
+}
 
 namespace hdn {
 	HdnModel::HdnModel(HdnDevice& device, const HdnModel::Builder &builder) : hdnDevice{device}
@@ -160,7 +176,8 @@ namespace hdn {
 	  
 		vertices.clear();
 		indices.clear();
-	  
+
+		std::unordered_map<Vertex, uint32_t> uniqueVertices{};	  
 		for (const auto &shape : shapes) {
 		  for (const auto &index : shape.mesh.indices) {
 			Vertex vertex{};
@@ -198,7 +215,12 @@ namespace hdn {
 				  attrib.texcoords[2 * index.texcoord_index + 1],
 			  };
 			}
-			vertices.push_back(vertex);
+
+			if (uniqueVertices.count(vertex) == 0){
+				uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+				vertices.push_back(vertex);
+			}
+			indices.push_back(uniqueVertices[vertex]);
 		  }
 		}
 	}
