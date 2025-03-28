@@ -39,7 +39,7 @@ namespace hdn {
 		vkUnmapMemory(hdnDevice.device(), vertexBufferMemory);
 	}
 
-    void HdnModel::createIndexBuffers(const std::vector<uint32_t> &indices)
+    void HdnModel::createIndexBuffer(const std::vector<uint32_t> &indices)
     {
 		indexCount = static_cast<uint32_t>(indices.size());
 		hasIndexBuffer = indexCount > 0;
