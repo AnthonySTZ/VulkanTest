@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <cstring>
+#include <iostream>
 
 namespace hdn {
 	HdnModel::HdnModel(HdnDevice& device, const HdnModel::Builder &builder) : hdnDevice{device}
@@ -91,8 +92,17 @@ namespace hdn {
 		vkFreeMemory(hdnDevice.device(), stagingBufferMemory, nullptr);
     }
 
+    std::unique_ptr<HdnModel> HdnModel::createModelFromFile(HdnDevice &device, const std::string &filepath)
+    {
+        Builder builder{};
+		builder.loadModel(filepath);
+		std::cout << "Vertex count: " << builder.vertices.size() << "\n";
+
+		return std::make_unique<HdnModel>(device, builder);
+    }
+
     void HdnModel::bind(VkCommandBuffer commandBuffer)
-	{
+    {
 		VkBuffer buffers[] = { vertexBuffer };
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
@@ -137,5 +147,17 @@ namespace hdn {
 		return attributeDescriptions;
 
 	}
+
+    void HdnModel::Builder::loadModel(const std::string &filepath)
+    {
+		tinyobj::attrib_t attrib;
+		std::vector<tinyobj::shape_t> shapes;
+		std::vector<tinyobj::material_t> materials;
+		std::string warn, err;
+
+		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filepath.c_str())) {
+			throw std::runtime_error(warn + err);
+		}
+    }
 
 }
