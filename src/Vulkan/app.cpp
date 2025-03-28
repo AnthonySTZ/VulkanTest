@@ -104,7 +104,7 @@ namespace hdn {
 
 	void App::loadGameObjects()
 	{
-		std::shared_ptr<HdnModel> hdnModel = HdnModel::createModelFromFile(hdnDevice, "A:\\Programming\\VulkanTest\\models\\flat_vase.obj");
+		std::shared_ptr<HdnModel> hdnModel = HdnModel::createModelFromFile(hdnDevice, "../models/flat_vase.obj");
 		auto gameObject = HdnGameObject::createGameObject();
 		gameObject.model = hdnModel;
 		gameObject.transform.translation = {0.f, 0.f, 2.f};
