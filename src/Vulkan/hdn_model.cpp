@@ -4,14 +4,19 @@
 #include <cstring>
 
 namespace hdn {
-	HdnModel::HdnModel(HdnDevice& device, const std::vector<Vertex>& vertices) : hdnDevice{device}
+	HdnModel::HdnModel(HdnDevice& device, const HdnModel::Builder &builder) : hdnDevice{device}
 	{
-		createVertexBuffers(vertices);
+		createVertexBuffers(builder.vertices);
+		createIndexBuffers(builder.indices);
 	}
 	HdnModel::~HdnModel()
 	{
 		vkDestroyBuffer(hdnDevice.device(), vertexBuffer, nullptr);
 		vkFreeMemory(hdnDevice.device(), vertexBufferMemory, nullptr);
+		if (hasIndexBuffer) {
+			vkDestroyBuffer(hdnDevice.device(), indexBuffer, nullptr);
+			vkFreeMemory(hdnDevice.device(), indexBufferMemory, nullptr);
+		}
 	}
 
 
@@ -34,16 +39,44 @@ namespace hdn {
 		vkUnmapMemory(hdnDevice.device(), vertexBufferMemory);
 	}
 
-	void HdnModel::bind(VkCommandBuffer commandBuffer)
+    void HdnModel::createIndexBuffers(const std::vector<uint32_t> &indices)
+    {
+		indexCount = static_cast<uint32_t>(indices.size());
+		hasIndexBuffer = indexCount > 0;
+		if (!hasIndexBuffer) return;
+
+		VkDeviceSize bufferSize = sizeof(indices[0]) * indexCount;
+		hdnDevice.createBuffer(
+			bufferSize,
+			VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			indexBuffer,
+			indexBufferMemory);
+
+		void* data;
+		vkMapMemory(hdnDevice.device(), indexBufferMemory, 0, bufferSize, 0, &data);
+		memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
+		vkUnmapMemory(hdnDevice.device(), indexBufferMemory);
+    }
+
+    void HdnModel::bind(VkCommandBuffer commandBuffer)
 	{
 		VkBuffer buffers[] = { vertexBuffer };
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
+
+		if (hasIndexBuffer) {
+			vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		}
 	}
 
 	void HdnModel::draw(VkCommandBuffer commandBuffer)
 	{
-		vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
+		if (hasIndexBuffer) {
+			vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+		} else {
+			vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
+		}
 	}
 
 	std::vector<VkVertexInputBindingDescription> HdnModel::Vertex::getBindingDescriptions()
