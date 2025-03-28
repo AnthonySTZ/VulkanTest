@@ -21,7 +21,12 @@ namespace hdn {
 			static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
 		};
 
-		HdnModel(HdnDevice& device, const std::vector<Vertex>& vertices);
+		struct Builder {
+			std::vector<Vertex> vertices{};
+			std::vector<uint32_t> indices{};
+		};
+
+		HdnModel(HdnDevice& device, const HdnModel::Builder &builder);
 		~HdnModel();
 
 		HdnModel(const HdnModel&) = delete;
@@ -32,10 +37,17 @@ namespace hdn {
 
 	private:
 		void createVertexBuffers(const std::vector<Vertex>& vertices);
+		void createIndexBuffers(const std::vector<uint32_t>& indices);
 
 		HdnDevice& hdnDevice;
+		
 		VkBuffer vertexBuffer;
 		VkDeviceMemory vertexBufferMemory;
 		uint32_t vertexCount;
+
+		bool hasIndexBuffer = false;
+		VkBuffer indexBuffer;
+		VkDeviceMemory indexBufferMemory;
+		uint32_t indexCount;
 	};
 }
