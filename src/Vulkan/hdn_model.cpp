@@ -198,7 +198,6 @@ namespace hdn {
 				  attrib.texcoords[2 * index.texcoord_index + 1],
 			  };
 			}
-	  
 			vertices.push_back(vertex);
 		  }
 		}
