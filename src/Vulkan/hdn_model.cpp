@@ -26,17 +26,31 @@ namespace hdn {
 		assert(vertexCount >= 3 && "Vertex count must be  at least 3!");
 
 		VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount;
+
+		VkBuffer stagingBuffer;
+		VkDeviceMemory stagingBufferMemory;
 		hdnDevice.createBuffer(
 			bufferSize,
-			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			stagingBuffer,
+			stagingBufferMemory);
+
+		void* data;
+		vkMapMemory(hdnDevice.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
+		memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
+		vkUnmapMemory(hdnDevice.device(), stagingBufferMemory);
+
+		hdnDevice.createBuffer(
+			bufferSize,
+			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT ,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 			vertexBuffer,
 			vertexBufferMemory);
 
-		void* data;
-		vkMapMemory(hdnDevice.device(), vertexBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
-		vkUnmapMemory(hdnDevice.device(), vertexBufferMemory);
+		hdnDevice.copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+		vkDestroyBuffer(hdnDevice.device(), stagingBuffer, nullptr);
+		vkFreeMemory(hdnDevice.device(), stagingBufferMemory, nullptr);
 	}
 
     void HdnModel::createIndexBuffer(const std::vector<uint32_t> &indices)
@@ -46,17 +60,31 @@ namespace hdn {
 		if (!hasIndexBuffer) return;
 
 		VkDeviceSize bufferSize = sizeof(indices[0]) * indexCount;
+
+		VkBuffer stagingBuffer;
+		VkDeviceMemory stagingBufferMemory;
 		hdnDevice.createBuffer(
 			bufferSize,
-			VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			stagingBuffer,
+			stagingBufferMemory);
+
+		void* data;
+		vkMapMemory(hdnDevice.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
+		memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
+		vkUnmapMemory(hdnDevice.device(), stagingBufferMemory);
+
+		hdnDevice.createBuffer(
+			bufferSize,
+			VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT ,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 			indexBuffer,
 			indexBufferMemory);
 
-		void* data;
-		vkMapMemory(hdnDevice.device(), indexBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
-		vkUnmapMemory(hdnDevice.device(), indexBufferMemory);
+		hdnDevice.copyBuffer(stagingBuffer, indexBuffer, bufferSize);
+		vkDestroyBuffer(hdnDevice.device(), stagingBuffer, nullptr);
+		vkFreeMemory(hdnDevice.device(), stagingBufferMemory, nullptr);
     }
 
     void HdnModel::bind(VkCommandBuffer commandBuffer)
