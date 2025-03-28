@@ -17,6 +17,7 @@ namespace hdn {
 
 		// T * Ry * Rx * Rz * Scale
 		glm::mat4 mat4();
+		glm::mat3 normalMatrix();
 	};
 
 	class HdnGameObject {
