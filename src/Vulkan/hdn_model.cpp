@@ -7,7 +7,7 @@ namespace hdn {
 	HdnModel::HdnModel(HdnDevice& device, const HdnModel::Builder &builder) : hdnDevice{device}
 	{
 		createVertexBuffers(builder.vertices);
-		createIndexBuffers(builder.indices);
+		createIndexBuffer(builder.indices);
 	}
 	HdnModel::~HdnModel()
 	{
