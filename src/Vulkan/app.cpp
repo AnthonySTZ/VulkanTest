@@ -105,11 +105,18 @@ namespace hdn {
 	void App::loadGameObjects()
 	{
 		std::shared_ptr<HdnModel> hdnModel = HdnModel::createModelFromFile(hdnDevice, "../models/flat_vase.obj");
-		auto gameObject = HdnGameObject::createGameObject();
-		gameObject.model = hdnModel;
-		gameObject.transform.translation = {0.f, 0.f, 2.f};
-		gameObject.transform.scale = glm::vec3(1.f);
-		gameObjects.push_back(std::move(gameObject));
+		auto vase = HdnGameObject::createGameObject();
+		vase.model = hdnModel;
+		vase.transform.translation = {-.2f, 0.f, 2.f};
+		vase.transform.scale = glm::vec3(1.f);
+		gameObjects.push_back(std::move(vase));
+
+		hdnModel = HdnModel::createModelFromFile(hdnDevice, "../models/colored_cube.obj");
+		auto cube = HdnGameObject::createGameObject();
+		cube.model = hdnModel;
+		cube.transform.translation = {.2f, 0.f, 2.f};
+		cube.transform.scale = glm::vec3(.15f);
+		gameObjects.push_back(std::move(cube));
 		
 	}
 
