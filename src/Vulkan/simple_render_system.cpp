@@ -13,7 +13,7 @@ namespace hdn {
 
 	struct SimplePushConstantData {
 		glm::mat4 tranform{ 1.0f }; // Identity matrix
-		glm::mat4 modelMatrix{ 1.0f }; // Identity matrix		
+		glm::mat4 normalMatrix{ 1.0f }; // Identity matrix		
 	};
 
 	SimpleRenderSystem* SimpleRenderSystem::appPointer = nullptr;
@@ -79,7 +79,7 @@ namespace hdn {
 			SimplePushConstantData push{};
 			auto modelMatrix = obj.transform.mat4();
 			push.tranform = projectionView * modelMatrix;
-			push.modelMatrix = modelMatrix;
+			push.normalMatrix = obj.transform.normalMatrix();
 
 			vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
 				sizeof(SimplePushConstantData), &push);
