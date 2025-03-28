@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include "hdn_camera.h"
+#include "keyboard_movement_controller.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -50,18 +51,31 @@ namespace hdn {
 	{
 		float aspect = hdnRenderer.getAspectRation();
 		// camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-		// camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
-		camera.setViewTarget(glm::vec3(-5.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.f));
+		camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.f, 0.f, 1.f));
+		// camera.setViewTarget(glm::vec3(-5.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.f));
 		camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 20.f);
+
+		auto viewerObj = HdnGameObject::createGameObject();
+
+		KeyboardMovementController cameraController{};
 
 		unsigned int currentFrame = 0;
 		float sumFps = 0; 
+
+		auto currentTime = std::chrono::high_resolution_clock::now();
 
 		while (!hdnWindow.shouldClose()) {
 			glfwPollEvents();
 
 			auto start_time = std::chrono::high_resolution_clock::now();
+			float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(start_time - currentTime).count();
+			currentTime = start_time;
+
+			cameraController.moveInPlaneXZ(hdnWindow.getWindow(), frameTime, viewerObj);
+			camera.setViewYXZ(viewerObj.transform.translation, viewerObj.transform.rotation);
 			drawFrame();
+
+
 			auto end_time = std::chrono::high_resolution_clock::now();
 			auto frame_time = std::chrono::duration<double>(end_time - start_time).count(); // Time in seconds
 			auto fps = 1.0 / frame_time; // Frames per second
