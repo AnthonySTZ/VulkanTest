@@ -18,9 +18,9 @@ namespace hdn {
 
 		bool shouldClose() { return glfwWindowShouldClose(window); };
 		VkExtent2D getExtent() { return { static_cast<uint32_t>(width), static_cast<uint32_t>(height )}; };
-		bool wasWindowResized() { return frameBufferResized; };
+		bool wasWindowResized() const { return frameBufferResized; };
 		void resetWindowResizedFlag() { frameBufferResized = false; };
-		GLFWwindow* getWindow() { return window; };
+		GLFWwindow* getWindow() const { return window; };
 		void setWidth(int newWidth) { width = newWidth; };
 		void setHeight(int newHeight) { height = newHeight; };
 
