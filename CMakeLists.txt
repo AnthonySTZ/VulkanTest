@@ -58,3 +58,11 @@ if(DEFINED ENV{VULKAN})
 else()
     message(WARNING "VULKAN environment variable not set. Include directories might be missing.")
 endif()
+
+# IMPORT TINY OBJ LOADER
+if(DEFINED ENV{TINYOBJ})
+    target_include_directories(vulkan PRIVATE $ENV{TINYOBJ})
+    message(STATUS "Using TINYOBJ include directory: $ENV{TINYOBJ}")
+else()
+    message(WARNING "TINYOBJ environment variable not set. Include directories might be missing.")
+endif()
