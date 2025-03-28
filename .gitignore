@@ -448,5 +448,5 @@ FodyWeavers.xsd
 .ionide
 
 build
-
+out
 .vscode
