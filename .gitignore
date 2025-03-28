@@ -447,6 +447,8 @@ FodyWeavers.xsd
 .history
 .ionide
 
+*.spv
+
 build
 out
 models

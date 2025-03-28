@@ -13,7 +13,7 @@ namespace hdn {
 
 	struct SimplePushConstantData {
 		glm::mat4 tranform{ 1.0f }; // Identity matrix
-		alignas(16) glm::vec3 color;
+		glm::mat4 modelMatrix{ 1.0f }; // Identity matrix		
 	};
 
 	SimpleRenderSystem* SimpleRenderSystem::appPointer = nullptr;
@@ -77,8 +77,9 @@ namespace hdn {
 			obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.0001f, glm::two_pi<float>());
 
 			SimplePushConstantData push{};
-			push.color = obj.color;
-			push.tranform = projectionView * obj.transform.mat4();
+			auto modelMatrix = obj.transform.mat4();
+			push.tranform = projectionView * modelMatrix;
+			push.modelMatrix = modelMatrix;
 
 			vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
 				sizeof(SimplePushConstantData), &push);
