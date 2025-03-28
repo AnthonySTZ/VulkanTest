@@ -54,7 +54,8 @@ namespace hdn {
 		camera.setViewTarget(glm::vec3(-5.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.f));
 		camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 20.f);
 
-		
+		unsigned int currentFrame = 0;
+		float sumFps = 0; 
 
 		while (!hdnWindow.shouldClose()) {
 			glfwPollEvents();
@@ -64,7 +65,17 @@ namespace hdn {
 			auto end_time = std::chrono::high_resolution_clock::now();
 			auto frame_time = std::chrono::duration<double>(end_time - start_time).count(); // Time in seconds
 			auto fps = 1.0 / frame_time; // Frames per second
-			std::cout << fps << " fps\n";
+
+			sumFps += fps;
+			currentFrame++;
+
+			if (currentFrame >= 5000) {
+				sumFps /= currentFrame;
+				std::cout << sumFps << " avg fps\n";
+				currentFrame = 0;
+				sumFps = 0;
+			} 
+
 		}
 	}
 
