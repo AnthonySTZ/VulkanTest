@@ -10,7 +10,7 @@ namespace hdn {
         if (glfwGetKey(window, keys.lookUp) == GLFW_PRESS) rotate.x += 1.f;
         if (glfwGetKey(window, keys.lookDown) == GLFW_PRESS) rotate.x -= 1.f;
 
-        if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon()){
+        if (glm::dot(rotate, rotate) > glm::epsilon<float>()){
             gameObject.transform.rotation += lookSpeed * dt * glm::normalize(rotate);
         }
 
@@ -30,7 +30,7 @@ namespace hdn {
         if (glfwGetKey(window, keys.moveUp) == GLFW_PRESS) moveDir += upDir;
         if (glfwGetKey(window, keys.moveDown) == GLFW_PRESS) moveDir -= upDir;
 
-        if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()){
+        if (glm::dot(moveDir, moveDir) > glm::epsilon<float>()){
             gameObject.transform.translation += moveSpeed * dt * glm::normalize(moveDir);
         }
     }
