@@ -2,7 +2,6 @@
 
 #include "hdn_camera.h"
 #include "keyboard_movement_controller.h"
-#include "hdn_buffer.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -15,11 +14,6 @@
 #include <chrono>
 
 namespace hdn {
-
-	struct GlobalUbo {
-		glm::vec4 projectionView{1.f};
-		glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
-	};
 
 	App* App::appPointer = nullptr;
 
@@ -55,6 +49,8 @@ namespace hdn {
 
 	void App::run()
 	{
+		globalUboBuffer.map();
+
 		float aspect = hdnRenderer.getAspectRation();
 		// camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
 		camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.f, 0.f, 1.f));
@@ -101,6 +97,14 @@ namespace hdn {
 
 	void App::drawFrame() {
 		if (auto commandBuffer = hdnRenderer.beginFrame()){
+			int frameIndex = hdnRenderer.getFrameIndex();
+			// update
+			GlobalUbo ubo{};
+			ubo.projectionView = camera.getProjection() * camera.getView();
+			globalUboBuffer.writeToIndex(&ubo, frameIndex);
+			globalUboBuffer.flushIndex(frameIndex);
+
+			// render
 			hdnRenderer.beginSwapChainRenderPass(commandBuffer);
 			simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
 			hdnRenderer.endSwapChainRenderPass(commandBuffer);

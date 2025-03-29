@@ -4,10 +4,16 @@
 #include "hdn_renderer.h"
 #include "hdn_game_object.h"
 #include "simple_render_system.h"
+#include "hdn_buffer.h"
 
 #include <memory>
 #include <vector>
 namespace hdn {
+
+	struct GlobalUbo {
+		glm::mat4 projectionView{1.f};
+		glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
+	};
 
 	class App {
 
@@ -37,6 +43,14 @@ namespace hdn {
 		SimpleRenderSystem simpleRenderSystem{hdnDevice, hdnRenderer.getSwapChainRenderPass()};
 		std::vector<HdnGameObject> gameObjects;
 		HdnCamera camera{};
+		HdnBuffer globalUboBuffer{
+			hdnDevice,
+			sizeof(GlobalUbo),
+			HdnSwapChain::MAX_FRAMES_IN_FLIGHT,
+			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			hdnDevice.properties.limits.minUniformBufferOffsetAlignment
+		};
 	};
 
 }
