@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hdn_device.h"
+#include "hdn_buffer.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -53,13 +54,11 @@ namespace hdn {
 
 		HdnDevice& hdnDevice;
 		
-		VkBuffer vertexBuffer;
-		VkDeviceMemory vertexBufferMemory;
+		std::unique_ptr<HdnBuffer> vertexBuffer;
 		uint32_t vertexCount;
 
 		bool hasIndexBuffer = false;
-		VkBuffer indexBuffer;
-		VkDeviceMemory indexBufferMemory;
+		std::unique_ptr<HdnBuffer> indexBuffer;
 		uint32_t indexCount;
 	};
 }
