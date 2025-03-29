@@ -2,6 +2,7 @@
 
 #include "hdn_camera.h"
 #include "keyboard_movement_controller.h"
+#include "hdn_buffer.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -14,6 +15,11 @@
 #include <chrono>
 
 namespace hdn {
+
+	struct GlobalUbo {
+		glm::vec4 projectionView{1.f};
+		glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
+	};
 
 	App* App::appPointer = nullptr;
 
