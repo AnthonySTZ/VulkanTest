@@ -66,11 +66,11 @@ namespace hdn {
 		std::cout << "Shaders loaded\n";
 	}
 
-	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<HdnGameObject> &gameObjects, const HdnCamera &camera)
+	void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo, std::vector<HdnGameObject> &gameObjects)
 	{
-		hdnPipeline->bind(commandBuffer);
+		hdnPipeline->bind(frameInfo.commandBuffer);
 
-		auto projectionView = camera.getProjection() * camera.getView();
+		auto projectionView = frameInfo.camera.getProjection() * frameInfo.camera.getView();
 
 		for (auto& obj : gameObjects) {
 			// obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.0002f, glm::two_pi<float>());
@@ -81,11 +81,11 @@ namespace hdn {
 			push.tranform = projectionView * modelMatrix;
 			push.normalMatrix = obj.transform.normalMatrix();
 
-			vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+			vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
 				sizeof(SimplePushConstantData), &push);
 
-			obj.model->bind(commandBuffer);
-			obj.model->draw(commandBuffer);
+			obj.model->bind(frameInfo.commandBuffer);
+			obj.model->draw(frameInfo.commandBuffer);
 		}
 	}
 

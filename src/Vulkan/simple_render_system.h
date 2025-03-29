@@ -3,6 +3,7 @@
 #include "hdn_pipeline.h"
 #include "hdn_game_object.h"
 #include "hdn_camera.h"
+#include "hdn_frame_info.h"
 
 #include <memory>
 #include <vector>
@@ -19,7 +20,7 @@ namespace hdn {
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-        void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<HdnGameObject> &gameObjects, const HdnCamera &camera);
+        void renderGameObjects(FrameInfo &frameInfo, std::vector<HdnGameObject> &gameObjects);
 
 	private:
 		void createPipelineLayout();

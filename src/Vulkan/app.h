@@ -43,6 +43,7 @@ namespace hdn {
 		SimpleRenderSystem simpleRenderSystem{hdnDevice, hdnRenderer.getSwapChainRenderPass()};
 		std::vector<HdnGameObject> gameObjects;
 		HdnCamera camera{};
+		float frameTime;
 		HdnBuffer globalUboBuffer{
 			hdnDevice,
 			sizeof(GlobalUbo),

@@ -70,7 +70,7 @@ namespace hdn {
 			glfwPollEvents();
 
 			auto start_time = std::chrono::high_resolution_clock::now();
-			float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(start_time - currentTime).count();
+			frameTime = std::chrono::duration<float, std::chrono::seconds::period>(start_time - currentTime).count();
 			currentTime = start_time;
 
 			cameraController.moveInPlaneXZ(hdnWindow.getWindow(), frameTime, viewerObj);
@@ -98,6 +98,13 @@ namespace hdn {
 	void App::drawFrame() {
 		if (auto commandBuffer = hdnRenderer.beginFrame()){
 			int frameIndex = hdnRenderer.getFrameIndex();
+			FrameInfo frameInfo{
+				frameIndex,
+				frameTime,
+				commandBuffer,
+				camera
+			};
+
 			// update
 			GlobalUbo ubo{};
 			ubo.projectionView = camera.getProjection() * camera.getView();
@@ -106,7 +113,7 @@ namespace hdn {
 
 			// render
 			hdnRenderer.beginSwapChainRenderPass(commandBuffer);
-			simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
+			simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
 			hdnRenderer.endSwapChainRenderPass(commandBuffer);
 			hdnRenderer.endFrame();
 		}
