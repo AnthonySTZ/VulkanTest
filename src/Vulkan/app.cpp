@@ -48,7 +48,7 @@ namespace hdn {
 		appPointer->hdnRenderer.recreateSwapChain();
 		float aspect = appPointer->hdnRenderer.getAspectRation();
 		// appPointer->camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-		appPointer->camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 10.f);
+		appPointer->camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 1000.f);
 		appPointer->drawFrame();
 	}
 
@@ -60,7 +60,7 @@ namespace hdn {
 
 		float aspect = hdnRenderer.getAspectRation();
 		camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.f, 0.f, 1.f));
-		camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 20.f);
+		camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 1000.f);
 		// camera.setViewTarget(glm::vec3(-5.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.f));
 		// camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
 
@@ -149,16 +149,24 @@ namespace hdn {
 		std::shared_ptr<HdnModel> hdnModel = HdnModel::createModelFromFile(hdnDevice, "../models/flat_vase.obj");
 		auto vase = HdnGameObject::createGameObject();
 		vase.model = hdnModel;
-		vase.transform.translation = {-.2f, 0.f, 2.f};
+		vase.transform.translation = {-.2f, 0.f, 1.f};
 		vase.transform.scale = glm::vec3(1.f);
 		gameObjects.push_back(std::move(vase));
 
 		hdnModel = HdnModel::createModelFromFile(hdnDevice, "../models/colored_cube.obj");
 		auto cube = HdnGameObject::createGameObject();
 		cube.model = hdnModel;
-		cube.transform.translation = {.2f, 0.f, 2.f};
+		cube.transform.translation = {.2f, -0.25f, 1.f};
 		cube.transform.scale = glm::vec3(.15f);
 		gameObjects.push_back(std::move(cube));
+
+		hdnModel = HdnModel::createModelFromFile(hdnDevice, "../models/floor.obj");
+		auto floor = HdnGameObject::createGameObject();
+		floor.model = hdnModel;
+		floor.transform.translation = {.0f, .5f, .5f};
+		floor.transform.scale = glm::vec3(5.f);
+		gameObjects.push_back(std::move(floor));
+		
 		
 	}
 
