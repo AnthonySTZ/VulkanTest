@@ -43,9 +43,10 @@ namespace hdn {
 		HdnDevice hdnDevice{ hdnWindow };
 		HdnRenderer hdnRenderer{hdnWindow, hdnDevice};
 
-		SimpleRenderSystem simpleRenderSystem{hdnDevice, hdnRenderer.getSwapChainRenderPass()};
+		std::unique_ptr<SimpleRenderSystem> simpleRenderSystem;
 
 		std::unique_ptr<HdnDescriptorPool> globalPool{};
+		std::vector<VkDescriptorSet> globalDescriptorSets = std::vector<VkDescriptorSet>(HdnSwapChain::MAX_FRAMES_IN_FLIGHT);
 		std::vector<HdnGameObject> gameObjects;
 		HdnCamera camera{};
 		float frameTime;

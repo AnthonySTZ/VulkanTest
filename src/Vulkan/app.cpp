@@ -105,11 +105,13 @@ namespace hdn {
 	void App::drawFrame() {
 		if (auto commandBuffer = hdnRenderer.beginFrame()){
 			int frameIndex = hdnRenderer.getFrameIndex();
+
 			FrameInfo frameInfo{
 				frameIndex,
 				frameTime,
 				commandBuffer,
-				camera
+				camera,
+				globalDescriptorSets[frameIndex]
 			};
 
 			// update
@@ -120,7 +122,7 @@ namespace hdn {
 
 			// render
 			hdnRenderer.beginSwapChainRenderPass(commandBuffer);
-			simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+			simpleRenderSystem->renderGameObjects(frameInfo, gameObjects);
 			hdnRenderer.endSwapChainRenderPass(commandBuffer);
 			hdnRenderer.endFrame();
 		}
@@ -132,13 +134,14 @@ namespace hdn {
 									.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
 									.build();
 
-		std::vector<VkDescriptorSet> globalDescriptorSets(HdnSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0; i < globalDescriptorSets.size(); i++) {
 			auto bufferInfo = globalUboBuffer.descriptorInfo();
 			HdnDescriptorWriter(*globalSetLayout, *globalPool)
 							.writeBuffer(0, &bufferInfo)
 							.build(globalDescriptorSets[i]);
 		}
+
+		simpleRenderSystem = std::make_unique<SimpleRenderSystem>(hdnDevice, hdnRenderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout());
     }
 
     void App::loadGameObjects()
