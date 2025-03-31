@@ -14,8 +14,8 @@ namespace hdn {
 	struct GlobalUbo {
 		glm::mat4 projectionView{1.f};
 		glm::vec4 ambientLightColor{1.f, 1.f, 1.f, .02f};
-		glm::vec3 lightPosition{-1.f};
-		alignas(16) glm::vec4 lightColor{1.f}; // vec4(r, g, b, intensity)
+		glm::vec3 lightPosition{0.0f, -2.f, 0.0f};
+		alignas(16) glm::vec4 lightColor{1.f, .2f, .1f, 5.0f}; // vec4(r, g, b, intensity)
 	};
 
 	class App {
