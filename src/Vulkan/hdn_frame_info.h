@@ -11,5 +11,6 @@ namespace hdn {
         float frameTime;
         VkCommandBuffer commandBuffer;
         HdnCamera &camera;
+        VkDescriptorSet globalDescriptorSet;
     };
 }
