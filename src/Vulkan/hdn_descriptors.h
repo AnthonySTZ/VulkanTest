@@ -9,6 +9,7 @@
 
 namespace hdn {
 
+    
 class HdnDescriptorSetLayout {
  public:
   class Builder {
@@ -42,6 +43,8 @@ class HdnDescriptorSetLayout {
 
   friend class HdnDescriptorWriter;
 };
+
+
 
 class HdnDescriptorPool {
  public:
@@ -83,6 +86,8 @@ class HdnDescriptorPool {
 
   friend class HdnDescriptorWriter;
 };
+
+
 
 class HdnDescriptorWriter {
  public:
