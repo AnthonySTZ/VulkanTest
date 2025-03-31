@@ -13,7 +13,9 @@ namespace hdn {
 
 	struct GlobalUbo {
 		glm::mat4 projectionView{1.f};
-		glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
+		glm::vec4 ambientLightColor{1.f, 1.f, 1.f, .02f};
+		glm::vec3 lightPosition{-1.f};
+		alignas(16) glm::vec4 lightColor{1.f}; // vec4(r, g, b, intensity)
 	};
 
 	class App {
