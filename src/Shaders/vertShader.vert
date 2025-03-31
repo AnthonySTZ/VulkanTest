@@ -17,14 +17,15 @@ layout(push_constant) uniform Push{
 	mat4 normalMatrix;
 } push;
 
-const float AMBIENT = 0.02;
+const float AMBIENT_INTENSITY = 0.03f;
+const vec3 AMBIENT = vec3(0.4f, 0.7f, 0.9f) * AMBIENT_INTENSITY;
 
 void main(){
 	gl_Position = ubo.projectionViewMatrix * push.modelMatrix * vec4(position, 1.0);
 
 	vec3 normalWorldSpace = normalize(mat3(push.normalMatrix) * normal);
 
-	float lightIntensity = AMBIENT + max(dot(normalWorldSpace, ubo.directionToLight), 0.0);
+	float lightIntensity = max(dot(normalWorldSpace, ubo.directionToLight), 0.0);
 
-	fragColor = lightIntensity * color;
+	fragColor = lightIntensity * color + AMBIENT;
 }
