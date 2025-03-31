@@ -12,7 +12,7 @@
 namespace hdn {
 
 	struct SimplePushConstantData {
-		glm::mat4 tranform{ 1.0f }; // Identity matrix
+		glm::mat4 modelMatrix{ 1.0f }; // Identity matrix
 		glm::mat4 normalMatrix{ 1.0f }; // Identity matrix		
 	};
 
@@ -73,15 +73,21 @@ namespace hdn {
 	{
 		hdnPipeline->bind(frameInfo.commandBuffer);
 
-		auto projectionView = frameInfo.camera.getProjection() * frameInfo.camera.getView();
+		vkCmdBindDescriptorSets(
+			frameInfo.commandBuffer, 
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			pipelineLayout,
+			0, 1,
+			&frameInfo.globalDescriptorSet,
+			0, nullptr);
 
 		for (auto& obj : gameObjects) {
-			// obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.0002f, glm::two_pi<float>());
-			// obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.0001f, glm::two_pi<float>());
+			obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.0002f, glm::two_pi<float>());
+			obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.0001f, glm::two_pi<float>());
 
 			SimplePushConstantData push{};
 			auto modelMatrix = obj.transform.mat4();
-			push.tranform = projectionView * modelMatrix;
+			push.modelMatrix = modelMatrix;
 			push.normalMatrix = obj.transform.normalMatrix();
 
 			vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
