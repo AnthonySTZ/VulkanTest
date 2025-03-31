@@ -5,6 +5,7 @@
 #include "hdn_game_object.h"
 #include "simple_render_system.h"
 #include "hdn_buffer.h"
+#include "hdn_descriptors.h"
 
 #include <memory>
 #include <vector>
@@ -33,6 +34,8 @@ namespace hdn {
 	private:
 		void setWindowResizeRefresh();
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+
+		void createDescriptors();
 		void loadGameObjects();
 		void drawFrame();
 
@@ -41,9 +44,13 @@ namespace hdn {
 		HdnRenderer hdnRenderer{hdnWindow, hdnDevice};
 
 		SimpleRenderSystem simpleRenderSystem{hdnDevice, hdnRenderer.getSwapChainRenderPass()};
+
+		std::unique_ptr<HdnDescriptorPool> globalPool{};
 		std::vector<HdnGameObject> gameObjects;
 		HdnCamera camera{};
 		float frameTime;
+
+
 		HdnBuffer globalUboBuffer{
 			hdnDevice,
 			sizeof(GlobalUbo),
