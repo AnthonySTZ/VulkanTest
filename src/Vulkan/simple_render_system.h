@@ -14,7 +14,7 @@ namespace hdn {
 	public:
 		static SimpleRenderSystem* appPointer;
 
-		SimpleRenderSystem(HdnDevice &device, VkRenderPass renderPass);
+		SimpleRenderSystem(HdnDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		~SimpleRenderSystem();
 
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
@@ -23,7 +23,7 @@ namespace hdn {
         void renderGameObjects(FrameInfo &frameInfo, std::vector<HdnGameObject> &gameObjects);
 
 	private:
-		void createPipelineLayout();
+		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void createPipeline(VkRenderPass renderPass);
 
 		HdnDevice &hdnDevice;
