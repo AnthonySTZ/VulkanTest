@@ -69,7 +69,7 @@ namespace hdn {
 		std::cout << "Shaders loaded\n";
 	}
 
-	void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo, std::vector<HdnGameObject> &gameObjects)
+	void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo)
 	{
 		hdnPipeline->bind(frameInfo.commandBuffer);
 
@@ -81,7 +81,8 @@ namespace hdn {
 			&frameInfo.globalDescriptorSet,
 			0, nullptr);
 
-		for (auto& obj : gameObjects) {
+		for (auto& kv : frameInfo.gameObjects) {
+			auto &obj = kv.second;
 			// obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.0002f, glm::two_pi<float>());
 			// obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.0001f, glm::two_pi<float>());
 

@@ -111,7 +111,8 @@ namespace hdn {
 				frameTime,
 				commandBuffer,
 				camera,
-				globalDescriptorSets[frameIndex]
+				globalDescriptorSets[frameIndex],
+				gameObjects
 			};
 
 			// update
@@ -122,7 +123,7 @@ namespace hdn {
 
 			// render
 			hdnRenderer.beginSwapChainRenderPass(commandBuffer);
-			simpleRenderSystem->renderGameObjects(frameInfo, gameObjects);
+			simpleRenderSystem->renderGameObjects(frameInfo);
 			hdnRenderer.endSwapChainRenderPass(commandBuffer);
 			hdnRenderer.endFrame();
 		}
@@ -151,21 +152,21 @@ namespace hdn {
 		vase.model = hdnModel;
 		vase.transform.translation = {-.2f, 0.f, 1.f};
 		vase.transform.scale = glm::vec3(1.f);
-		gameObjects.push_back(std::move(vase));
+		gameObjects.emplace(vase.getId(), std::move(vase));
 
 		hdnModel = HdnModel::createModelFromFile(hdnDevice, "../models/colored_cube.obj");
 		auto cube = HdnGameObject::createGameObject();
 		cube.model = hdnModel;
 		cube.transform.translation = {.2f, -0.25f, 1.f};
 		cube.transform.scale = glm::vec3(.15f);
-		gameObjects.push_back(std::move(cube));
+		gameObjects.emplace(cube.getId(), std::move(cube));
 
 		hdnModel = HdnModel::createModelFromFile(hdnDevice, "../models/floor.obj");
 		auto floor = HdnGameObject::createGameObject();
 		floor.model = hdnModel;
 		floor.transform.translation = {.0f, .5f, .5f};
 		floor.transform.scale = glm::vec3(5.f);
-		gameObjects.push_back(std::move(floor));
+		gameObjects.emplace(floor.getId(), std::move(floor));
 		
 		
 	}

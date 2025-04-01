@@ -5,11 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <memory>
+#include <unordered_map>
 
 namespace hdn {
-
-	
-
 	struct TransformComponent {
 		glm::vec3 translation;
 		glm::vec3 scale{ 1.f, 1.f, 1.f };
@@ -23,6 +21,7 @@ namespace hdn {
 	class HdnGameObject {
 	public:
 		using id_t = unsigned int;
+		using Map = std::unordered_map<id_t, HdnGameObject>;
 
 		static HdnGameObject createGameObject() {
 			static id_t currentId = 0;

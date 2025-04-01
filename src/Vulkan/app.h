@@ -49,7 +49,7 @@ namespace hdn {
 
 		std::unique_ptr<HdnDescriptorPool> globalPool{};
 		std::vector<VkDescriptorSet> globalDescriptorSets = std::vector<VkDescriptorSet>(HdnSwapChain::MAX_FRAMES_IN_FLIGHT);
-		std::vector<HdnGameObject> gameObjects;
+		HdnGameObject::Map gameObjects;
 		HdnCamera camera{};
 		float frameTime;
 
