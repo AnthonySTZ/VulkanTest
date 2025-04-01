@@ -4,6 +4,7 @@
 #include "hdn_renderer.h"
 #include "hdn_game_object.h"
 #include "systems/simple_render_system.h"
+#include "systems/point_light_system.h"
 #include "hdn_buffer.h"
 #include "hdn_descriptors.h"
 
@@ -47,6 +48,7 @@ namespace hdn {
 		HdnRenderer hdnRenderer{hdnWindow, hdnDevice};
 
 		std::unique_ptr<SimpleRenderSystem> simpleRenderSystem;
+		std::unique_ptr<PointLightSystem> pointLightSystem;
 
 		std::unique_ptr<HdnDescriptorPool> globalPool{};
 		std::vector<VkDescriptorSet> globalDescriptorSets = std::vector<VkDescriptorSet>(HdnSwapChain::MAX_FRAMES_IN_FLIGHT);

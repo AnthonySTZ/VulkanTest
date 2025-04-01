@@ -125,6 +125,7 @@ namespace hdn {
 			// render
 			hdnRenderer.beginSwapChainRenderPass(commandBuffer);
 			simpleRenderSystem->renderGameObjects(frameInfo);
+			pointLightSystem->render(frameInfo);
 			hdnRenderer.endSwapChainRenderPass(commandBuffer);
 			hdnRenderer.endFrame();
 		}
@@ -144,6 +145,7 @@ namespace hdn {
 		}
 
 		simpleRenderSystem = std::make_unique<SimpleRenderSystem>(hdnDevice, hdnRenderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout());
+		pointLightSystem = std::make_unique<PointLightSystem>(hdnDevice, hdnRenderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout());
     }
 
     void App::loadGameObjects()
