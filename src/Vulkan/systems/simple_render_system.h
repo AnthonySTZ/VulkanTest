@@ -1,9 +1,9 @@
 #pragma once
 
-#include "hdn_pipeline.h"
-#include "hdn_game_object.h"
-#include "hdn_camera.h"
-#include "hdn_frame_info.h"
+#include "../hdn_pipeline.h"
+#include "../hdn_game_object.h"
+#include "../hdn_camera.h"
+#include "../hdn_frame_info.h"
 
 #include <memory>
 #include <vector>
