@@ -173,7 +173,9 @@ namespace hdn {
 		gameObjects.emplace(floor.getId(), std::move(floor));
 
 		{
-			auto pointLight = HdnGameObject::makePointLight();
+			auto pointLight = HdnGameObject::makePointLight(0.2f);
+			pointLight.transform.translation.y = -1.f;
+			pointLight.transform.translation.z = 1.f;
 			gameObjects.emplace(pointLight.getId(), std::move(pointLight));
 		}
 		
