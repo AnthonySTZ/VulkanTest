@@ -7,7 +7,7 @@
 
 namespace hdn {
 
-    #define MAX_LIGTHS 10
+    #define MAX_LIGHTS 10
 
     struct PointLight {
         glm::vec4 position{};
@@ -18,7 +18,7 @@ namespace hdn {
 		glm::mat4 projection{1.f};
 		glm::mat4 view{1.f};
 		glm::vec4 ambientLightColor{1.f, 1.f, 1.f, .02f};
-		PointLight pointLights[MAX_LIGTHS];
+		PointLight pointLights[MAX_LIGHTS];
         int numLights;
 	};
 

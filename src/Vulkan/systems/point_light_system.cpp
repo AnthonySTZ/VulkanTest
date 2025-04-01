@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <array>
 #include <iostream>
+#include <cassert>
 
 namespace hdn {
 
@@ -77,6 +78,7 @@ namespace hdn {
 		for (auto& kv: frameInfo.gameObjects) {
 			auto& obj = kv.second;
 			if (obj.pointLight == nullptr) continue;
+			assert(lightIndex < MAX_LIGHTS && "Point lights exceed maximum specified");
 
 			ubo.pointLights[lightIndex].position = glm::vec4(obj.transform.translation, 1.f);
 			ubo.pointLights[lightIndex].color = glm::vec4(obj.color, obj.pointLight->LightIntensity);
