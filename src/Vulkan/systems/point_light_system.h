@@ -12,8 +12,6 @@ namespace hdn {
 	class PointLightSystem {
 
 	public:
-		static PointLightSystem* appPointer;
-
 		PointLightSystem(HdnDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		~PointLightSystem();
 
