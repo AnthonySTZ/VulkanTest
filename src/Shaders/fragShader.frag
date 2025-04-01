@@ -27,18 +27,18 @@ layout(push_constant) uniform Push{
 } push;
 
 void main(){
-	vec3 diffuseLight = ubo.ambientLightColor.xyz *ubo.ambientLightColor.w;
-	vec3 surfaceNormal = normalize(fragNormalWorld);
+	vec3 diffuseLight = ubo.ambientLightColor.xyz * ubo.ambientLightColor.w;
+  	vec3 surfaceNormal = normalize(fragNormalWorld);
 
-	for (int i = 0; i < ubo.numLights; i++){
-		PointLight light = ubo.pointLights[i];
+  	for (int i = 0; i < ubo.numLights; i++) {
+    	PointLight light = ubo.pointLights[i];
 		vec3 directionToLight = light.position.xyz - fragPosWorld;
-		float attenuation = 1.0 / dot(directionToLight, directionToLight);
-		float cosAngIncidence = max(dot(surfaceNormal, normalize(directionToLight)), 0.0);
-		vec3 lightColor = light.color.xyz * light.color.w * attenuation;
+		float attenuation = 1.0 / dot(directionToLight, directionToLight); // distance squared
+		float cosAngIncidence = max(dot(surfaceNormal, normalize(directionToLight)), 0);
+		vec3 intensity = light.color.xyz * light.color.w * attenuation;
 
-		diffuseLight += lightColor * cosAngIncidence;
-	}
+		diffuseLight += intensity * cosAngIncidence;
+  	}
 
-	outColor = vec4(diffuseLight * fragColor, 1.0);
+  	outColor = vec4(diffuseLight * fragColor, 1.0);
 }

@@ -62,7 +62,7 @@ namespace hdn {
 		
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		std::cout << "Loading Shaders..\n";
+		std::cout << "Loading POINT LIGHTS Shaders..\n";
 		hdnPipeline = std::make_unique<HdnPipeline>(
 			hdnDevice,
 			"Shaders/point_light_vert.spv",
@@ -79,12 +79,12 @@ namespace hdn {
 			auto& obj = kv.second;
 			if (obj.pointLight == nullptr) continue;
 			assert(lightIndex < MAX_LIGHTS && "Point lights exceed maximum specified");
-
+			
 			ubo.pointLights[lightIndex].position = glm::vec4(obj.transform.translation, 1.f);
 			ubo.pointLights[lightIndex].color = glm::vec4(obj.color, obj.pointLight->LightIntensity);
 			lightIndex++;
 		}
-
+		
 		ubo.numLights = lightIndex;
     }
 
@@ -110,12 +110,15 @@ namespace hdn {
 			push.color = glm::vec4(obj.color, obj.pointLight->LightIntensity);
 			push.radius = obj.transform.scale.x;
 
-			vkCmdPushConstants(frameInfo.commandBuffer, 
-								pipelineLayout,
-								VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-								0,
-								sizeof(PointLightPushConstants),
-								&push);
+			
+			vkCmdPushConstants(
+				frameInfo.commandBuffer,
+				pipelineLayout,
+				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+				0,
+				sizeof(PointLightPushConstants),
+				&push);
+
 			vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
 		}
 	}

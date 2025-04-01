@@ -119,6 +119,7 @@ namespace hdn {
 			GlobalUbo ubo{};
 			ubo.projection = camera.getProjection();
 			ubo.view = camera.getView();
+			pointLightSystem->update(frameInfo, ubo);
 			globalUboBuffer.writeToIndex(&ubo, frameIndex);
 			globalUboBuffer.flushIndex(frameIndex);
 
@@ -170,7 +171,11 @@ namespace hdn {
 		floor.transform.translation = {.0f, .5f, .5f};
 		floor.transform.scale = glm::vec3(5.f);
 		gameObjects.emplace(floor.getId(), std::move(floor));
-		
+
+		{
+			auto pointLight = HdnGameObject::makePointLight();
+			gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+		}
 		
 	}
 
