@@ -50,6 +50,9 @@ namespace hdn {
 
 		PipelineConfigInfo pipelineConfig{};
 		HdnPipeline::defaultPipelineConfigInfo(pipelineConfig);
+		pipelineConfig.bindingDescriptions.clear();
+		pipelineConfig.attributeDescriptions.clear();
+		
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
 		std::cout << "Loading Shaders..\n";
