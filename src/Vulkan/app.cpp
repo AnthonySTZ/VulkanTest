@@ -117,7 +117,8 @@ namespace hdn {
 
 			// update
 			GlobalUbo ubo{};
-			ubo.projectionView = camera.getProjection() * camera.getView();
+			ubo.projection = camera.getProjection();
+			ubo.view = camera.getView();
 			globalUboBuffer.writeToIndex(&ubo, frameIndex);
 			globalUboBuffer.flushIndex(frameIndex);
 
