@@ -16,8 +16,6 @@ namespace hdn {
 		glm::mat4 normalMatrix{ 1.0f }; // Identity matrix		
 	};
 
-	SimpleRenderSystem* SimpleRenderSystem::appPointer = nullptr;
-
 	SimpleRenderSystem::SimpleRenderSystem(HdnDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 	 : hdnDevice{device}
 	{

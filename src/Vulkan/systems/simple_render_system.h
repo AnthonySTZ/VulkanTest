@@ -12,8 +12,6 @@ namespace hdn {
 	class SimpleRenderSystem {
 
 	public:
-		static SimpleRenderSystem* appPointer;
-
 		SimpleRenderSystem(HdnDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		~SimpleRenderSystem();
 
