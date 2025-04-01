@@ -18,6 +18,10 @@ namespace hdn {
 		glm::mat3 normalMatrix();
 	};
 
+	struct PointLightComponent {
+		float LightIntensity = 1.0f;
+	};
+
 	class HdnGameObject {
 	public:
 		using id_t = unsigned int;
@@ -28,6 +32,8 @@ namespace hdn {
 			return HdnGameObject(currentId++);
 		};
 
+		static HdnGameObject makePointLight(float intensity=1.f, float radius = 0.05f, glm::vec3 color = glm::vec3(1.f) );
+
 		HdnGameObject(const HdnGameObject&) = delete;
 		HdnGameObject& operator=(const HdnGameObject&) = delete;
 		HdnGameObject(HdnGameObject&&) = default;
@@ -35,9 +41,12 @@ namespace hdn {
 
 		id_t getId() const { return id; };
 
-		std::shared_ptr<HdnModel> model{};
 		glm::vec3 color{};
 		TransformComponent transform{};
+		
+		// optional pointer components 
+		std::shared_ptr<HdnModel> model{};
+		std::unique_ptr<PointLightComponent> pointLight = nullptr;
 
 	private:
 		HdnGameObject(id_t objId) : id{ objId } {};

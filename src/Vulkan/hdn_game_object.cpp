@@ -57,4 +57,13 @@ namespace hdn {
 			invScale.z * (c1 * c2)
 		}};
     }
+    HdnGameObject HdnGameObject::makePointLight(float intensity, float radius, glm::vec3 color)
+    {
+        HdnGameObject gameObj = HdnGameObject::createGameObject();
+		gameObj.color = color;
+		gameObj.transform.scale.x = radius;
+		gameObj.pointLight = std::make_unique<PointLightComponent>();
+		gameObj.pointLight->LightIntensity = intensity;
+		return gameObj;
+    }
 }

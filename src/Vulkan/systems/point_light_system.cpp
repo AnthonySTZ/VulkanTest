@@ -11,6 +11,12 @@
 
 namespace hdn {
 
+	struct PointLightPushConstants {
+		glm::vec4 position{};
+		glm::vec4 color{};
+		float radius;
+	};
+
 	PointLightSystem::PointLightSystem(HdnDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 	 : hdnDevice{device}
 	{
@@ -25,10 +31,10 @@ namespace hdn {
 
 	void PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
 	{
-		// VkPushConstantRange pushConstantRange{};
-		// pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-		// pushConstantRange.offset = 0;
-		// pushConstantRange.size = sizeof(SimplePushConstantData);
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(PointLightPushConstants);
 
 		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{globalSetLayout};
 
@@ -36,8 +42,8 @@ namespace hdn {
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
 		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
-		pipelineLayoutInfo.pushConstantRangeCount= 0;
-		pipelineLayoutInfo.pPushConstantRanges = nullptr;
+		pipelineLayoutInfo.pushConstantRangeCount= 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 		if (vkCreatePipelineLayout(hdnDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
 			throw std::runtime_error("Failed to create PipelineLayout!");
 		}
@@ -65,8 +71,23 @@ namespace hdn {
 		std::cout << "Shaders loaded\n";
 	}
 
-	void PointLightSystem::render(FrameInfo &frameInfo)
-	{
+    void PointLightSystem::update(FrameInfo &frameInfo, GlobalUbo &ubo)
+    {
+		int lightIndex = 0;
+		for (auto& kv: frameInfo.gameObjects) {
+			auto& obj = kv.second;
+			if (obj.pointLight == nullptr) continue;
+
+			ubo.pointLights[lightIndex].position = glm::vec4(obj.transform.translation, 1.f);
+			ubo.pointLights[lightIndex].color = glm::vec4(obj.color, obj.pointLight->LightIntensity);
+			lightIndex++;
+		}
+
+		ubo.numLights = lightIndex;
+    }
+
+    void PointLightSystem::render(FrameInfo &frameInfo)
+    {
 		hdnPipeline->bind(frameInfo.commandBuffer);
 
 		vkCmdBindDescriptorSets(
@@ -77,7 +98,24 @@ namespace hdn {
 			&frameInfo.globalDescriptorSet,
 			0, nullptr);
 
-		vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
+
+		for (auto& kv: frameInfo.gameObjects) {
+			auto& obj = kv.second;
+			if (obj.pointLight == nullptr) continue;
+
+			PointLightPushConstants push{};
+			push.position = glm::vec4(obj.transform.translation, 1.f);
+			push.color = glm::vec4(obj.color, obj.pointLight->LightIntensity);
+			push.radius = obj.transform.scale.x;
+
+			vkCmdPushConstants(frameInfo.commandBuffer, 
+								pipelineLayout,
+								VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+								0,
+								sizeof(PointLightPushConstants),
+								&push);
+			vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
+		}
 	}
 
 }
