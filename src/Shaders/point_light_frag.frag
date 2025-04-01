@@ -13,7 +13,7 @@ layout (set=0, binding=0) uniform GlobalUbo {
 } ubo;
 
 void main() {
-    float dist = sqrt(dot(fragOffset, fragOffset));
+    float dist = dot(fragOffset, fragOffset);
     if (dist >= 1.0) { // Make a circle instead of a square
         discard;
     }
