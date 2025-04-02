@@ -21,16 +21,50 @@ namespace hdn {
 	{
 		appPointer = this;
 		globalPool = HdnDescriptorPool::Builder(hdnDevice)
-						.setMaxSets(HdnSwapChain::MAX_FRAMES_IN_FLIGHT)
-						.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, HdnSwapChain::MAX_FRAMES_IN_FLIGHT)
+						.setMaxSets(HdnSwapChain::MAX_FRAMES_IN_FLIGHT * 2)
+						.setPoolFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+						.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, HdnSwapChain::MAX_FRAMES_IN_FLIGHT * 2)
 						.build();
 
 		setWindowResizeRefresh();
 		loadGameObjects();
+		initImGui();
 	}
 	App::~App()
 	{
+		ImGui_ImplVulkan_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+
 		appPointer = nullptr;
+	}
+
+	void App::initImGui() {		
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		ImGui_ImplGlfw_InitForVulkan(hdnWindow.getWindow(), true);
+
+		ImGui_ImplVulkan_InitInfo info{};
+		info.Instance = hdnDevice.getVulkanInstance();
+		info.DescriptorPool = globalPool->getPool();
+		info.RenderPass = hdnRenderer.getSwapChainRenderPass();
+		info.PhysicalDevice = hdnDevice.getPhysicalDevice();
+		info.Device = hdnDevice.device();
+		info.Queue = hdnDevice.graphicsQueue(); // Vulkan graphics queue
+		info.PipelineCache = VK_NULL_HANDLE;
+		info.DescriptorPool = globalPool->getPool(); // Ensure pool has enough descriptors
+		info.RenderPass = hdnRenderer.getSwapChainRenderPass(); // Vulkan render pass
+		info.MinImageCount = HdnSwapChain::MAX_FRAMES_IN_FLIGHT; // Swap chain images
+		info.ImageCount = HdnSwapChain::MAX_FRAMES_IN_FLIGHT;
+
+		ImGui_ImplVulkan_Init(&info);
+
+		ImGui_ImplVulkan_CreateFontsTexture();
+		
+		vkDeviceWaitIdle(hdnDevice.device());
+		ImGui_ImplVulkan_DestroyFontsTexture();
+	
 	}
 
 	void App::setWindowResizeRefresh() {
@@ -127,6 +161,17 @@ namespace hdn {
 			hdnRenderer.beginSwapChainRenderPass(commandBuffer);
 			simpleRenderSystem->renderGameObjects(frameInfo);
 			pointLightSystem->render(frameInfo);
+
+			ImGui_ImplVulkan_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+
+			ImGui::ShowDemoWindow();
+
+			ImGui::Render();
+
+			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
+
 			hdnRenderer.endSwapChainRenderPass(commandBuffer);
 			hdnRenderer.endFrame();
 		}

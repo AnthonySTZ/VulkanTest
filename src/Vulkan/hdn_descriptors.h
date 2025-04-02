@@ -76,6 +76,8 @@ class HdnDescriptorPool {
   bool allocateDescriptor(
       const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet &descriptor) const;
 
+  VkDescriptorPool getPool() const { return descriptorPool; };
+
   void freeDescriptors(std::vector<VkDescriptorSet> &descriptors) const;
 
   void resetPool();

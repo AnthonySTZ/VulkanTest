@@ -8,6 +8,13 @@
 #include "hdn_buffer.h"
 #include "hdn_descriptors.h"
 
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include <imgui.h>
+#include <imconfig.h>
+#include <imgui_internal.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_vulkan.h>
+
 #include <memory>
 #include <vector>
 namespace hdn {
@@ -31,6 +38,7 @@ namespace hdn {
 		void setWindowResizeRefresh();
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
+		void initImGui();
 		void createDescriptors();
 		void loadGameObjects();
 		void drawFrame();

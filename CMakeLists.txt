@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+# set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 
 if(MSVC)
-    add_compile_options(/EHsc)
+    add_compile_options(/EHsc /FS)
 endif()
 
 project(vulkan)
@@ -15,11 +15,11 @@ file(GLOB_RECURSE HEADERS src/*.h)
 
 set(IMGUI_SOURCES
     $ENV{IMGUI}/imgui.cpp
-    $ENV{IMGUI}/imgui_draw.cpp
     $ENV{IMGUI}/imgui_demo.cpp
-    $ENV{IMGUI}/imgui_tables.cpp
+    $ENV{IMGUI}/imgui_draw.cpp
     $ENV{IMGUI}/imgui_widgets.cpp
-    $ENV{IMGUI}/backends/imgui_impl_glfw.cpp 
+    $ENV{IMGUI}/imgui_tables.cpp
+    $ENV{IMGUI}/backends/imgui_impl_glfw.cpp
     $ENV{IMGUI}/backends/imgui_impl_vulkan.cpp
 )
 
