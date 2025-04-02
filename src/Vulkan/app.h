@@ -15,8 +15,8 @@ namespace hdn {
 	class App {
 
 	public:
-		static constexpr int WIDTH = 800;
-		static constexpr int HEIGHT = 800;
+		static constexpr int WIDTH = 1200;
+		static constexpr int HEIGHT = 1000;
 
 		static App* appPointer;
 
