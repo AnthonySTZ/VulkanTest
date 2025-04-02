@@ -13,8 +13,18 @@ project(vulkan)
 file(GLOB_RECURSE SRC_FILES src/*.cpp)
 file(GLOB_RECURSE HEADERS src/*.h)
 
+set(IMGUI_SOURCES
+    $ENV{IMGUI}/imgui.cpp
+    $ENV{IMGUI}/imgui_draw.cpp
+    $ENV{IMGUI}/imgui_demo.cpp
+    $ENV{IMGUI}/imgui_tables.cpp
+    $ENV{IMGUI}/imgui_widgets.cpp
+    $ENV{IMGUI}/backends/imgui_impl_glfw.cpp 
+    $ENV{IMGUI}/backends/imgui_impl_vulkan.cpp
+)
+
 # Create the executable
-add_executable(vulkan ${SRC_FILES} ${HEADERS})
+add_executable(vulkan ${SRC_FILES} ${HEADERS} ${IMGUI_SOURCES})
 
 add_custom_target(compile_shaders
     COMMAND compile_shaders.bat
@@ -61,7 +71,7 @@ endif()
 
 # IMPORT TINY OBJ LOADER
 if(DEFINED ENV{IMGUI})
-    include_directories(vulkan PRIVATE $ENV{IMGUI} $ENV{IMGUI}/backends)
+    target_include_directories(vulkan PRIVATE $ENV{IMGUI} $ENV{IMGUI}/backends)
     message(STATUS "Using IMGUI include directory: $ENV{IMGUI}")
 else()
     message(WARNING "IMGUI environment variable not set. Include directories might be missing.")
@@ -74,3 +84,4 @@ if(DEFINED ENV{TINYOBJ})
 else()
     message(WARNING "TINYOBJ environment variable not set. Include directories might be missing.")
 endif()
+
