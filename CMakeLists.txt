@@ -60,6 +60,14 @@ else()
 endif()
 
 # IMPORT TINY OBJ LOADER
+if(DEFINED ENV{IMGUI})
+    include_directories(vulkan PRIVATE $ENV{IMGUI} $ENV{IMGUI}/backends)
+    message(STATUS "Using IMGUI include directory: $ENV{IMGUI}")
+else()
+    message(WARNING "IMGUI environment variable not set. Include directories might be missing.")
+endif()
+
+# IMPORT TINY OBJ LOADER
 if(DEFINED ENV{TINYOBJ})
     target_include_directories(vulkan PRIVATE $ENV{TINYOBJ})
     message(STATUS "Using TINYOBJ include directory: $ENV{TINYOBJ}")
